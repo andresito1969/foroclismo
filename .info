@@ -1,0 +1,3 @@
+composer create-project laravel/laravel foroclismo -> Crea el proyecto
+php artisan serve -> inicia el proyecto
+php artisan migrate -> Ejecuta las consultas sql
