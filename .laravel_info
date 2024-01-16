@@ -1,0 +1,11 @@
+config/database.php ->  Configura las conexiones a nuestra o nuestras BBDD (gracias al fichero .env excluido por github, tenemos las credenciales)
+                        De no tener dichas credenciales, tiene valores por defecto (motivos de seguridad).
+
+database/migrations ->  Contiene las migraciones para crear la BBDD con sus tablas y atributos
+                        función UP : Permite crear.
+                        función Down: Revierte lo creado por el up.
+                        En la CLI dependiendo de si queremos crear o no, usaremos : php artisan migrate | php artisan migrate:rollback
+
+                        Schema::create -> hace un insert
+                        Schema::table -> hace un update
+                        Schema::dropIfExists('table') || Schema::drop('table') -> Permite borrar una tabla
