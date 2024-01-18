@@ -31,3 +31,4 @@ php artisan make:model User -> permite crear un modelo de datos
     Podemos crear otro tipo de clases, no sólo migraciones:
         --factory, --seed, --controller, --requests, --policy, --all
 php artisan model:show User -> permite mostrar la información relativa del modelo, de una forma más visual y práctica.
+    Si no nos deja usar este comando, podemos instalar dbal, mediante: composer require --dev doctrine/dbal

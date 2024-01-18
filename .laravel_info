@@ -20,4 +20,11 @@ database/seeders    ->  Contiene los seeders, usados para poder crear los datos 
                         Contiene una única función run con la que ejecutará el código para crear los datos, podemos crearlos con Eloquent ORM o con el query builder
 
 
-app/models          -> Contiene los modelos de datos, que nos permiten interactuar con la BBDD
+app/models          ->  Contiene los modelos de datos, que nos permiten interactuar con la BBDD
+                        Al crear un modelo de datos, no necesitamos especificar a qué tabla ataca, ya que si hemos creado el modelo según la conveción de laravel, 
+                        el mismo modelo sabrá cómo encontrar la tabla, aún así de no encontrarla siempre podemos usar:
+                            protected $table = "my_table"
+                            EJ: Si tenemos la tabla users y creamos el modelo User, ya lo encontrará
+                            Pero si tenemos la tabla my_users y creamos el modelo User, no lo encontrará por cómo funciona el motor interno de laravel,
+                            de manera que deberíamos o crear el modelo Myuser o usar la variable $table = "my_users"
+                        
