@@ -1,6 +1,7 @@
 config/database.php ->  Configura las conexiones a nuestra o nuestras BBDD (gracias al fichero .env excluido por github, tenemos las credenciales)
                         De no tener dichas credenciales, tiene valores por defecto (motivos de seguridad).
 
+
 database/migrations ->  Contiene las migraciones para crear la BBDD con sus tablas y atributos
                         función UP : Permite crear.
                         función Down: Revierte lo creado por el up.
@@ -9,3 +10,14 @@ database/migrations ->  Contiene las migraciones para crear la BBDD con sus tabl
                         Schema::create -> hace un insert
                         Schema::table -> hace un update
                         Schema::dropIfExists('table') || Schema::drop('table') -> Permite borrar una tabla
+
+
+database/seeders    ->  Contiene los seeders, usados para poder crear los datos por defecto de la BBDD, normalmente estos datos pueden ser usados
+                        para poder tener datos iniciales con los que interactuar y testear la aplicación.
+
+                        CLI -> php artisan make:seeders UserSeeder
+
+                        Contiene una única función run con la que ejecutará el código para crear los datos, podemos crearlos con Eloquent ORM o con el query builder
+
+
+app/models          -> Contiene los modelos de datos, que nos permiten interactuar con la BBDD

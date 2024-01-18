@@ -1,8 +1,33 @@
+**INI**
 composer create-project laravel/laravel foroclismo -> Crea el proyecto
 php artisan serve -> inicia el proyecto
 
+
+laravel_info para más info <- En este archivo tendremos más información relativa al uso y funcionamiento de dichos conceptos.
+
+**Migrations** -> 
 php artisan migrate -> Ejecuta las consultas sql para migrar
 php artisan migrate:rollback -> Revierte las consultas sql, de manera que borraria las tablas. (Realmente rollbackea la última migración hecha, puede ir por grupos)
 php artisan migrate:fresh -> Hace un drop de todas las tablas, un poco similar al rollback
 php artisan make:migration table_name -> Crea un archivo de migración
 php artisan schema:dump -> del directorio ./database/migrations , junta todos los archivos de migraciones en uno, ideal cuando hacemos muchas migraciones o para limpiar.
+
+
+**Seeders**
+php artisan make:seeders UserSeeder -> Crea la clase seeder
+
+Para ejecutar las siguientes funciones de seeders, necesitamos especificar en DatabaseSeeder, qué seeders ejectuaremos y su orden, de lo contrario solo
+ejecutará los parámetros específicos (--class=UserSeeder, --seeder=UserSeeder) que son los específicos.
+php artisan db:seed -> Ejecuta los seeders  si añadimos --class=UserSeeder, ejecutará solo un seeder específico
+php artisan migrate:fresh --seed -> Permite ejecutar migraciones frescas y seeders, así vacíamos la tabla y a su vez ejecutamos nuevos seeders. 
+                                    con el parámetro --seeder=UserSeeder, ejecutará solo un seeder
+
+Los seeders pueden ser creados como factorias si se desea.
+
+
+**Models** (Eloquent ORM) Interact and retrieve data from the DB
+php artisan make:model User -> permite crear un modelo de datos
+    con el parámetro --migration (php artisan make:model User --migration), creará también su migración en caso de no tenerla.
+    Podemos crear otro tipo de clases, no sólo migraciones:
+        --factory, --seed, --controller, --requests, --policy, --all
+php artisan model:show User -> permite mostrar la información relativa del modelo, de una forma más visual y práctica.
