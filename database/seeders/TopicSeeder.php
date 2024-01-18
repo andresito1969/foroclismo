@@ -18,5 +18,17 @@ class TopicSeeder extends Seeder
             'topic_text' => 'Soy bastante nuevo en esto del ciclismo, qué creéis que es mejor, hacer rutas en carretera o en montaña?',
             'user_id' => 1,
         ]);
+
+        DB::table('topics')->insert([
+            'title' => 'Cuántos km hacéis a la semana?',
+            'topic_text' => 'Me gustaría saber más o menos de madia cuantos km hacéis!',
+            'user_id' => 2,
+        ]);
+
+        DB::table('topics')->insert([
+            'title' => 'Preséntate :D!',
+            'topic_text' => 'Buenas a tod@s! Os habla el administrador del foro, podéis presentaros en este hilo!',
+            'user_id' => 1,
+        ]);
     }
 }

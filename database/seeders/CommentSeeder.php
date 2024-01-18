@@ -19,5 +19,18 @@ class CommentSeeder extends Seeder
             'user_id' => 2,
             'topic_id' => 1
         ]);
+
+        DB::table('comments')->insert([
+            'text' => 'Gracias Juan por el comentario!',
+            'user_id' => 1,
+            'topic_id' => 1
+        ]);
+
+        // otro comentario que nada tiene que ver con el primer post, este comentario es del 2do post
+        DB::table('comments')->insert([
+            'text' => 'Suelo hacer 20km, que se me había olvidado de poner el texto del post!',
+            'user_id' => 1,
+            'topic_id' => 2
+        ]);
     }
 }

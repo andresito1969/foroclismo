@@ -27,4 +27,27 @@ app/models          ->  Contiene los modelos de datos, que nos permiten interact
                             EJ: Si tenemos la tabla users y creamos el modelo User, ya lo encontrará
                             Pero si tenemos la tabla my_users y creamos el modelo User, no lo encontrará por cómo funciona el motor interno de laravel,
                             de manera que deberíamos o crear el modelo Myuser o usar la variable $table = "my_users"
-                        
+
+
+resources/views     ->  Dentro de este directorio podemos crear las vistas de nuestra aplicación
+
+app/Http/Controllers->  Dentro de este directorio podemos crear los controladores que servirán para interactuar con la vista y el modelo de nuestra aplicación.
+                        Recordemos que laravel es MVC (modelo-vista-controlador), el modelo nunca interactuará con la vista y viceversa, este paso intermedio lo realiza
+                        el controlador.
+
+                        De manera que el controlador podrá usar los métodos del modelo para hacer un CRUD (crear, leer, actualizar, borrar) y tendrá la lógica de nuestra app, que 
+                        a su vez comunicará con la vista, la cual el usuario podrá ver.
+
+                        php artisan make:controller UserController
+
+                        Si vamos a este controlador, podemos ver que utiliza la vista user.profile, esto significa que dentro de resources/views va a buscar la carpeta user y luego
+                        el archivo profile, ya que el "." determina que está dentro del directorio.
+
+                        Luego en routes (web), podremos definir que usará ese controlador para que poniendo la url, pueda mostrar la vista con la información relativa
+
+app/Http/Middleware ->  Dentro de este directorio podremos crear los middlewares que nos permitirán añadir capas de seguridad al momento de realizar peticiones en el navegador.
+                        Es decir por ejemplo si el cliente quiere acceder a la edición de un post/topic, el middleware se encargará de permitir el acceso a esta edición,
+                        revisando si el usuario está logeado y, si el usuario que quiere editar dicho post, es el usuario que inicialmente lo ha creado.
+                        En caso contrario, de que no cumpla las condiciones, podrá devolver un error o redirigir a la página que querramos, en caso satisfactorio
+                        podremos acceder a la vista de edición de topic/post.
+
