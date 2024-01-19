@@ -16,11 +16,33 @@ use App\Http\Controllers\TopicController;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+// LOGIN & REGISTER VIEW
+Route::get('/login', [UserController::class, 'loginView'])->name('login_view');
+Route::get('/register', [UserController::class, 'registerView'])->name('register_view');
+// POST (CREATE LOGIN SESSION, CREATE OR REGISTER USER)
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+// DELETE (LOGOUT USER, DELETE USER)
+// Logout Route::delete('/logout');
+// Delete Route::delete('/delete_user');
 
+
+
+// TOPIC VIEWS
 Route::get('/', [TopicController::class, 'show']);
 Route::get('/topic/{id}', [TopicController::class, 'showOne'])->name('single_topic');
+// crear topic
+// editar topic
+// eliminar topic
 
+
+
+// USER VIEWS
 Route::get('/user/{id}', [UserController::class, 'show'])->name('profile');
+// editar 
+// eliminar
+
+
+// crear comentario
+// editar comentario
+// eliminar comentario
