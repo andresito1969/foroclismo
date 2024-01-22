@@ -11,6 +11,11 @@ class Topic extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'topic_text',
+        'user_id'
+    ];
     // Todos los topics que pertenezcan a este usuario
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);

@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\View\View;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+
 class UserController extends Controller
 {
     public function show(string $id): View {
@@ -38,7 +41,30 @@ class UserController extends Controller
     }
 
     public function login(Request $request) {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required']
+        ]);
 
+        if(Auth::attempt($credentials)){
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+        }
+
+
+        return back()->withErrors([
+            'email' => 'Algo ha fallado'
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request): RedirectResponse {
+
+        Auth::logout();
+    
+        $request->session()->invalidate();
+    
+        $request->session()->regenerateToken();
+    
         return redirect('/');
     }
 }

@@ -20,7 +20,7 @@
         <br>
 
         <input type="submit" value="Submit">
-        @error('title')
+        @error('email')
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror
     </form>

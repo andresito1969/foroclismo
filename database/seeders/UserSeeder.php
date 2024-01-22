@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'last_name' => 'Admin',
             'is_admin' => true,
             'email' => 'admin@foroclismo.com',
-            'password' => 'test'
+            'password' => bcrypt('test')
         ]);
 
         // aquí creamos un usuario no admin (sin especificarlo), como el valor por defecto es false, ya lo creará sin la necesidad de poner el booleano. 
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             'name' => 'Juan',
             'last_name' => 'Gómez',
             'email' => 'juan_gomez@foroclismo.com',
-            'password' => 'test'
+            'password' => bcrypt('test')
         ]);
     }
 }

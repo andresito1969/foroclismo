@@ -13,6 +13,7 @@
         <!-- Styles -->
     </head>
     <body>
+        @extends('layout.navbar') 
         @yield('content')
     </body>
 </html>

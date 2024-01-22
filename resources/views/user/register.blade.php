@@ -1,7 +1,7 @@
 @extends('layout.head_layout')
 
 @section('content')
-    <h1>Login</h1>
+    <h1>Register</h1>
     <br>
     <form method="POST" action="/register">
         @csrf
