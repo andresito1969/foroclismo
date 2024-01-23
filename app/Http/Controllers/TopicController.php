@@ -50,10 +50,17 @@ class TopicController extends Controller
     }
 
     public function createTopic(Request $request) {
+        $authenticatedUser = Auth::user();
+        $userId;
+        if(Auth::user()){
+            $userId = $authenticatedUser->id;
+        } else {
+            $userId = $request->user_id;
+        }
         $topic = new Topic([
             'title' => $request->title,
             'topic_text' => $request->topic_text,
-            'user_id' => Auth::user()->id
+            'user_id' => $userId
         ]);
 
         $topic->save();

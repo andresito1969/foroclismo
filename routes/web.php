@@ -33,7 +33,7 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::get('/', [TopicController::class, 'show'])->name('home');
 Route::get('/topic/{id}', [TopicController::class, 'showOne'])->name('single_topic');
 Route::get('/create_topic', [TopicController::class, 'createTopicView'])->name('create_topic')->middleware('auth');
-Route::post('/create_topic', [TopicController::class, 'createTopic'])->middleware('auth');
+Route::post('/create_topic', [TopicController::class, 'createTopic']);
 
 // editar topic
 // eliminar topic

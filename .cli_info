@@ -36,3 +36,15 @@ php artisan model:show User -> permite mostrar la información relativa del mode
 
 **Controller**
 php artisan make:controller UserController -> Permite crear un controlador
+
+
+**Tests**
+php artisan test -> ejecuta los tests escritos en el directorio /tests
+    Unit -> En el directorio unit, tenemos los tests unitarios, normalmente testearán un único método/función.
+    Feature -> Son tests más avanzados, donde un único test puede testear por ejemplo varios objetos, la base de datos, entre otros...
+php artisan config:clear -> limpia la caché
+
+php artisan make:test UserTest -> nos creará un fichero de test en la carpeta Feature
+php artisan make:test UserTest --unit -> Nos lo creará en unit
+
+Idealmente un test debe hacer solo una petición, si intentamos añadir varias peticiones a un único test, podemos tener un comportamiento inesperado
