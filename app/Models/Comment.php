@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
+    const maxLengthText = 65535;
+
     use HasFactory;
     protected $fillable = [
         'text',
@@ -20,5 +22,9 @@ class Comment extends Model
 
     public function topic(): BelongsTo {
         return $this->belongsTo(Topic::class);
+    }
+
+    public static function textLengthCheck($text) {
+        return strlen($text) > 0 && strlen($text) <= Comment::maxLengthText;
     }
 }

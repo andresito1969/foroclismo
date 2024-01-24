@@ -40,14 +40,26 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::get('/', [TopicController::class, 'show'])->name('home');
 Route::get('/topic/{topic_id}', [TopicController::class, 'showOne'])->name('single_topic');
 
-// GET Y POST (CREACIÓN) DE UN TOPIC
-Route::get('/create_topic', [TopicController::class, 'createTopicView'])->name('create_topic')->middleware('auth');
-Route::post('/create_topic', [TopicController::class, 'createTopic']);
 
-// GET Y UPDATE DE UN TOPIC & BORRADO DEL TOPIC
-Route::get('/topic/{topic_id}/edit_topic', [TopicController::class, 'editTopicView'])->name('edit_topic_view')->middleware('auth');
-Route::patch('/topic/{topic_id}/edit_topic', [TopicController::class, 'editTopic'])->name('edit_topic')->middleware('auth');
-Route::delete('/topic/{topic_id}/delete', [TopicController::class, 'deleteTopic'])->name('delete_topic')->middleware('auth');
+// Agrupaciones por middleware y prefijo, así no tenemos que ir llamando al método middleware (que nos verifica si está autenticado el usuario)
+Route::group(['middleware' => 'auth', 'prefix' => 'topic'], function() {
+    
+    // GET Y POST (CREACIÓN) DE UN TOPIC
+    Route::get('/create/topic', [TopicController::class, 'createTopicView'])->name('create_topic_view');
+    Route::post('/create', [TopicController::class, 'createTopic'])->name('create_topic');
+    
+    // GET Y UPDATE DE UN TOPIC & BORRADO DEL TOPIC
+    Route::get('/{topic_id}/edit_topic', [TopicController::class, 'editTopicView'])->name('edit_topic_view');
+    Route::patch('/{topic_id}/edit_topic', [TopicController::class, 'editTopic'])->name('edit_topic');
+    Route::delete('/{topic_id}/delete', [TopicController::class, 'deleteTopic'])->name('delete_topic');  
+    Route::get('/{topic_id}/create_comment', [CommentController::class, 'createCommentView'])->name('create_comment_view');
+    Route::post('/{topic_id}/create_comment', [CommentController::class, 'createComment'])->name('create_comment');
+
+    // GET & UPDATE & BORRADO DE COMENTARIO
+    Route::get('/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editCommentView'])->name('edit_comment_view');
+    Route::patch('/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editComment'])->name('edit_comment');
+    Route::delete('/{topic_id}/comment/{comment_id}', [CommentController::class, 'deleteComment'])->name('delete_comment');  
+});
 
 
 
@@ -55,18 +67,3 @@ Route::delete('/topic/{topic_id}/delete', [TopicController::class, 'deleteTopic'
 Route::get('/user/{user_id}', [UserController::class, 'show'])->name('profile');
 // editar 
 // eliminar
-
-
-
-/* 
- * VISTA DE CREACIÓN, VISTA DE EDICIÓN Y BORRADO DE COMENTARIOS
- * LOS COMENTARIOS NO TENDRÁN UNA VISTA DE MOSTRADO COMO TAL PORQUE PERTENECEN AL TOPIC!
- */
- // GET Y POST DE COMENTARIO
-Route::get('/topic/{topic_id}/create_comment', [CommentController::class, 'createCommentView'])->name('create_comment_view')->middleware('auth');
-Route::post('/topic/{topic_id}/create_comment', [CommentController::class, 'createComment'])->name('create_comment')->middleware('auth');
-
-// GET & UPDATE & BORRADO DE COMENTARIO
-Route::get('/topic/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editCommentView'])->name('edit_comment_view')->middleware('auth');
-Route::patch('/topic/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editComment'])->name('edit_comment')->middleware('auth');
-Route::delete('/topic/{topic_id}/comment/{comment_id}', [CommentController::class, 'deleteComment'])->name('delete_comment')->middleware('auth');

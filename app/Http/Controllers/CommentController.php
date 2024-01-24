@@ -24,8 +24,8 @@ class CommentController extends Controller
     
     // Esta función nos permite crear comentarios
     public function createComment(Request $request, $topicId) {
-        $isValidText = $this->isValidText($request->text, 65535);
-        $isAuthenticated = $this->isAuthenticated();
+        $isValidText = Comment::textLengthCheck($request->text);
+        $isAuthenticated = Auth::check();
         $isValidTopic = $this->isValidTopic($topicId);
 
         // Si no son correctas estas comprobaciones ejecuta el else.
@@ -43,7 +43,7 @@ class CommentController extends Controller
             return back()->withErrors([
                 // Si el texto es válido, poner un error genérico, de lo contrario informa que el comentario es o muy corto o muy largo.
                 'text_error' => $isValidText ? $genericError : $textError,
-            ])->onlyInput();
+            ]);
         }
     }
 
@@ -58,12 +58,12 @@ class CommentController extends Controller
         } else {
             return back()->withErrors([
                 'malicious_edit_error' => '¡Eps! Estás intentando editar un comentario que no es tuyo? :(',
-            ])->onlyInput();
+            ]);
         }        
     }
 
     public function editComment(Request $request, $topicId, $commentId) {
-        $isValidText = $this->isValidText($request->text, 65535);
+        $isValidText = Comment::textLengthCheck($request->text);
         $isValidTopic = $this->isValidTopic($topicId);
         $comment = Comment::findOrFail($commentId);
         $isValidUserId = $this->isValidUserId($comment->user_id);
@@ -73,7 +73,7 @@ class CommentController extends Controller
         }
         return back()->withErrors([
             'text_error' => $isValidText ? 'Algo ha fallado, vuelve a intentarlo' : 'Recuerda que debes poner un comentario entre 0 y 65535 carácteres...',
-        ])->onlyInput();
+        ]);
     }
     
     public function deleteComment(Request $request, $topicId, $commentId) {
@@ -96,16 +96,8 @@ class CommentController extends Controller
      * Funciones comunes usadas para añadir capas de seguridad.
      */
 
-     private function isValidUserId($userId) {
+    private function isValidUserId($userId) {
         return $userId == Auth::user()->id;
-     }
-
-     private function isValidText($text, $maxLength) {
-        return strlen($text) > 0 && strlen($text) <=  $maxLength;
-    }
-
-    private function isAuthenticated() {
-        return Auth::check();
     }
 
     private function isValidTopic($id) {

@@ -45,7 +45,6 @@ class TopicController extends Controller
             'isLogged' => $isLogged,
             'user_id' => $isLogged ? Auth::user()->id : 0,
             'isAdmin' => $isLogged ? Auth::user()->is_admin : 0
-            //'comments' => Topic::find($id)->comments
         ]);
     }
 
@@ -71,7 +70,7 @@ class TopicController extends Controller
         
         return back()->withErrors([
             'text_error' => $isValidText ? '' : 'El texto tiene que ser menor o igual a 65535 carácteres',
-            'title_error' => $isValidTitle ? '' : 'El titulo no puede ser mayor a 80 carácteres',
+            'title_error' => $isValidTitle ? '' : 'El titulo tiene que estar entre 0 y 80 carácteres',
         ]);
     }
 

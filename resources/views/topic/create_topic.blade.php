@@ -3,7 +3,7 @@
 @section('content')
     <h1>Crea un nuevo tema</h1>
     <br>
-    <form method="POST" action="/create_topic">
+    <form method="POST" action="{{ route('create_topic') }}">
         @csrf
         <label for="title">Título</label>
         <input id="title"
