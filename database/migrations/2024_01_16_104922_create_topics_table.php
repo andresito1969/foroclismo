@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('topic_text');
+            $table->string('title', 80); // Como 2do parámetro tenemos 80, que será el límite
+            $table->text('topic_text'); // Es text, porque ->string solo soporta 256 carácteres y para un foro es muy poco. Text soporta 65.535
             $table->timestamps();
         });
 

@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Topic extends Model
 {
     use HasFactory;
+    const maxLengthText = 65535;
+    const maxLengthTitle = 80;
 
     protected $fillable = [
         'title',
@@ -24,5 +26,13 @@ class Topic extends Model
     // Todos los comentarios que pertenezcan al topic
     public function comments():HasMany {
         return $this->hasMany(Comment::class);
+    }
+
+    public static function textLengthCheck($text) {
+        return strlen($text) > 0 && strlen($text) <= Topic::maxLengthText;
+    }
+
+    public static function titleLengthCheck($text) {
+        return strlen($text) > 0 && strlen($text) <= Topic::maxLengthTitle;
     }
 }

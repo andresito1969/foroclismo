@@ -20,4 +20,12 @@
         <br>
         <input type="submit" value="Submit">
     </form>
+
+    @error('title_error')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+
+    @error('text_error')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
 @endsection

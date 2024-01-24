@@ -17,36 +17,56 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-// LOGIN & REGISTER VIEW
+/*
+ * LOGIN & REGISTER & LOGOUT 
+ */
+// LOGIN & REGISTER VISTAS
 Route::get('/login', [UserController::class, 'loginView'])->name('login');
 Route::get('/register', [UserController::class, 'registerView'])->name('register_view');
-// POST (CREATE LOGIN SESSION, CREATE OR REGISTER USER)
+
+// LOGIN & REGISTER MÉTODOS
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-// DELETE (LOGOUT USER, DELETE USER)
+
+// LOGOUT USER MÉTODO, NO SE NECESITA VISTA PARA EL LOGOUT 
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-// Delete Route::delete('/delete_user');
 
 
 
-// TOPIC VIEWS
+/*
+ * TOPICS & ÚNICO TOPIC & CREACIÓN/ACTUALIZACIÓN/BORRADO
+ */
+// GET DE TODOS LOS TOPICS & GET DE UN ÚNICO TÓPIC
 Route::get('/', [TopicController::class, 'show'])->name('home');
-Route::get('/topic/{id}', [TopicController::class, 'showOne'])->name('single_topic');
+Route::get('/topic/{topic_id}', [TopicController::class, 'showOne'])->name('single_topic');
+
+// GET Y POST (CREACIÓN) DE UN TOPIC
 Route::get('/create_topic', [TopicController::class, 'createTopicView'])->name('create_topic')->middleware('auth');
 Route::post('/create_topic', [TopicController::class, 'createTopic']);
 
-// editar topic
-// eliminar topic
+// GET Y UPDATE DE UN TOPIC & BORRADO DEL TOPIC
+Route::get('/topic/{topic_id}/edit_topic', [TopicController::class, 'editTopicView'])->name('edit_topic_view')->middleware('auth');
+Route::patch('/topic/{topic_id}/edit_topic', [TopicController::class, 'editTopic'])->name('edit_topic')->middleware('auth');
+Route::delete('/topic/{topic_id}/delete', [TopicController::class, 'deleteTopic'])->name('delete_topic')->middleware('auth');
 
 
 
-// USER VIEWS
-Route::get('/user/{id}', [UserController::class, 'show'])->name('profile');
+// PERFIL DEL USUARIO
+Route::get('/user/{user_id}', [UserController::class, 'show'])->name('profile');
 // editar 
 // eliminar
 
-// COMMENT VIEWS
-Route::get('/topic/{id}/create_comment', [CommentController::class, 'createCommentView'])->name('create_comment_view')->middleware('auth');
-Route::post('/topic/{id}/create_comment', [CommentController::class, 'createComment'])->name('create_comment')->middleware('auth');
-// editar comentario
-// eliminar comentario
+
+
+/* 
+ * VISTA DE CREACIÓN, VISTA DE EDICIÓN Y BORRADO DE COMENTARIOS
+ * LOS COMENTARIOS NO TENDRÁN UNA VISTA DE MOSTRADO COMO TAL PORQUE PERTENECEN AL TOPIC!
+ */
+ // GET Y POST DE COMENTARIO
+Route::get('/topic/{topic_id}/create_comment', [CommentController::class, 'createCommentView'])->name('create_comment_view')->middleware('auth');
+Route::post('/topic/{topic_id}/create_comment', [CommentController::class, 'createComment'])->name('create_comment')->middleware('auth');
+
+// GET & UPDATE & BORRADO DE COMENTARIO
+Route::get('/topic/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editCommentView'])->name('edit_comment_view')->middleware('auth');
+Route::patch('/topic/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editComment'])->name('edit_comment')->middleware('auth');
+Route::delete('/topic/{topic_id}/comment/{comment_id}', [CommentController::class, 'deleteComment'])->name('delete_comment')->middleware('auth');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string("text");
+            $table->text("text"); // Es text, porque ->string solo soporta 256 carácteres y para un foro es muy poco. Text soporta 65.535
             $table->timestamps();
         });
 
