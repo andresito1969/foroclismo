@@ -34,6 +34,9 @@
         @error('text_error')
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror
+        @error('title_error')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         @error('generic_error')
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror

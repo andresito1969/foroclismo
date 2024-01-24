@@ -12,12 +12,14 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Traits\ErrorTextTrait;
+use App\Traits\UtilsTrait;
+
 
 
 class TopicController extends Controller
 {
     // Info del trait en el controlador de comment, básicamente para reaprovechar código genérico, evitar hardcodeos y tener una única fuente de la verdad.
-    use ErrorTextTrait;
+    use ErrorTextTrait, UtilsTrait;
 
     // En algunas vistas como la vista de creación de topic, no necesitamos revisar si el usuario está logeado, debido a que en el
     // router (routes/web.php) el middleware ya nos verifica si el usuario está autenticado, en caso contrario lo redirige al login automáticamente.
@@ -85,8 +87,8 @@ class TopicController extends Controller
 
     public function deleteTopic($topicId) {
         $topic = Topic::findOrFail($topicId);
-        $isValidUser = $this->isValidUserId($topic->user_id);
-        if(Auth::user()->is_admin || ($isValidUser && $topic)) {
+        $isValidUser = $this->checkValidAuthUser($topic->user_id);
+        if((Auth::user()->is_admin || $isValidUser) && $topic) {
             $topic->comments()->delete(); // esta línea nos va a permitir borrar los comentarios asociados al topic, de lo contrario vamos a tener una incosistencia!
             $topic->delete();
         }
@@ -96,7 +98,7 @@ class TopicController extends Controller
 
     public function editTopicView(Request $request, $topicId) {
         $topic = Topic::findOrFail($topicId);
-        $isValidUserId = $this->isValidUserId($topic->user_id);
+        $isValidUserId = $this->checkValidAuthUser($topic->user_id);
         if(Auth::user()->is_admin || $isValidUserId) {
             return view('topic.edit_topic', [
                 'topic' => $topic
@@ -112,8 +114,8 @@ class TopicController extends Controller
         $isValidText = Topic::textLengthCheck($request->text);
         $topic = Topic::findOrFail($topicId);
         $isValidTitle = Topic::titleLengthCheck($request->title);
-        $isValidUserId = $this->isValidUserId($topic->user_id);
-        if(Auth::user()->is_admin || ($isValidUserId && $isValidText)) {
+        $isValidUserId = $this->checkValidAuthUser($topic->user_id);
+        if((Auth::user()->is_admin || $isValidUserId) && $isValidText && $isValidTitle) {
             $topic->update([
                 'topic_text' => $request->text,
                 'title' => $request->title
@@ -122,14 +124,7 @@ class TopicController extends Controller
         }
         return back()->withErrors([
             'text_error' => $isValidText ? $this->getGenericError() : $this->getTopicTextLengthError(),
+            'title_error' => $isValidTitle ? $this->getGenericError() : $this->getTopicTitleLengthError()
         ]);
-    }
-
-    /**
-     * Funciones comunes usadas para añadir capas de seguridad.
-     */
-
-    private function isValidUserId($userId) {
-        return $userId == Auth::user()->id;
     }
 }

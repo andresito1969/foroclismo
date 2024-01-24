@@ -10,6 +10,7 @@ use App\Models\Topic;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\ErrorTextTrait;
+use App\Traits\UtilsTrait;
 
 
 class CommentController extends Controller
@@ -19,7 +20,7 @@ class CommentController extends Controller
      * nos va a devolver los textos de errores, así los tendremos centralizados y no hardcodeados en la app...
      * Para que de un vistazo cambiemos los textos de errores genéricos de la app
      */
-    use ErrorTextTrait; 
+    use ErrorTextTrait, UtilsTrait; 
 
     /*
      * Info adicional: En algunas vistas como la vista de creación de topic, no necesitamos revisar si el usuario está logeado, debido a que en el
@@ -60,7 +61,8 @@ class CommentController extends Controller
 
     public function editCommentView(Request $request, $topicId, $commentId) {
         $comment = Comment::findOrFail($commentId);
-        $isValidUserId = $comment->user_id == Auth::user()->id;
+        $isValidUserId = $this->checkValidAuthUser($comment->user_id);
+
         if(Auth::user()->is_admin || $isValidUserId) {
             return view('comment.edit_comment', [
                 'topic_id' => $topicId,
@@ -77,8 +79,8 @@ class CommentController extends Controller
         $isValidText = Comment::textLengthCheck($request->text);
         $isValidTopic = $this->isValidTopic($topicId);
         $comment = Comment::findOrFail($commentId);
-        $isValidUserId = $this->isValidUserId($comment->user_id);
-        if(Auth::user()->is_admin || ($isValidUserId && $isValidTopic && $isValidText)) {
+        $isValidUserId = $this->checkValidAuthUser($comment->user_id);
+        if((Auth::user()->is_admin || $isValidUserId) && $isValidTopic && $isValidText) {
             $comment->update(['text' => $request->text]);
             return redirect('/topic/' . $topicId);
         }
@@ -92,10 +94,10 @@ class CommentController extends Controller
     
     public function deleteComment(Request $request, $topicId, $commentId) {
         $comment = Comment::findOrFail($commentId);
-        $isValidUserId = $this->isValidUserId($comment->user_id);
+        $isValidUserId = $this->checkValidAuthUser($comment->user_id);
         $isValidTopic = $this->isValidTopic($topicId);
 
-        if(Auth::user()->is_admin || ($isValidUserId && $isValidTopic)) {
+        if((Auth::user()->is_admin || $isValidUserId) && $isValidTopic) {
             $comment->delete();
             return redirect('/topic/' . $topicId);
         }
@@ -103,15 +105,6 @@ class CommentController extends Controller
         return redirect('/topic/' . $topicId)->withErrors([
             'malicious_delete' => $this->getCommentMaliciousDelete()
         ]);
-    }
-
-
-    /**
-     * Funciones comunes usadas para añadir capas de seguridad.
-     */
-
-    private function isValidUserId($userId) {
-        return $userId == Auth::user()->id;
     }
 
     private function isValidTopic($id) {
