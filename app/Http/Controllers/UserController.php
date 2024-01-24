@@ -10,9 +10,12 @@ use Illuminate\View\View;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use App\Traits\ErrorTextTrait;
 
 class UserController extends Controller
 {
+    use ErrorTextTrait;
+
     public function show(string $id): View {
         return view('user.profile', [
             'user' => User::findOrFail($id)
@@ -53,7 +56,7 @@ class UserController extends Controller
 
 
         return back()->withErrors([
-            'email' => 'Algo ha fallado'
+            'email' => $this->getGenericError()
         ])->onlyInput('email');
     }
 

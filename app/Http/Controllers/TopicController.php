@@ -11,13 +11,20 @@ use Illuminate\View\View;
 
 use Illuminate\Support\Facades\Auth;
 
+use App\Traits\ErrorTextTrait;
+
+
 class TopicController extends Controller
 {
+    // Info del trait en el controlador de comment, básicamente para reaprovechar código genérico, evitar hardcodeos y tener una única fuente de la verdad.
+    use ErrorTextTrait;
 
     // En algunas vistas como la vista de creación de topic, no necesitamos revisar si el usuario está logeado, debido a que en el
     // router (routes/web.php) el middleware ya nos verifica si el usuario está autenticado, en caso contrario lo redirige al login automáticamente.
     public function show(): View {
 
+        // obtenemos la tabla topics y hacemos un join de usuarios + un select de las columnas de topics y usuarios, 
+        // para que en la vista de todos los topics, tengamos en cada topic el usuario que lo ha creado
         $topicList = DB::table('topics')
                     ->leftjoin('users', 'users.id', 'topics.user_id')
                     ->select('topics.*', 'users.name', 'users.last_name')
@@ -31,6 +38,8 @@ class TopicController extends Controller
     }
 
     public function showOne($id): View{
+
+        // Obtenemos de la tabla comments, un join de usuarios, para así poder tener en el select la info de usuarios relativa a su comentario.
         $commentList = DB::table('comments')
                 ->join('users', 'users.id', 'comments.user_id')
                 ->where('comments.topic_id', '=', $id)
@@ -69,8 +78,8 @@ class TopicController extends Controller
         }
         
         return back()->withErrors([
-            'text_error' => $isValidText ? '' : 'El texto tiene que ser menor o igual a 65535 carácteres',
-            'title_error' => $isValidTitle ? '' : 'El titulo tiene que estar entre 0 y 80 carácteres',
+            'text_error' => $isValidText ? '' : $this->getTopicTextLengthError(),
+            'title_error' => $isValidTitle ? '' : $this->getTopicTitleLengthError(),
         ]);
     }
 
@@ -94,7 +103,7 @@ class TopicController extends Controller
             ]);
         } else {
             return back()->withErrors([
-                'malicious_edit_error' => '¡Eps! Estás intentando editar un topic que no es tuyo? :(',
+                'malicious_edit_error' => $this->getTopicMaliciousEdit(),
             ]);
         }        
     }
@@ -112,7 +121,7 @@ class TopicController extends Controller
             return redirect('/topic/' . $topicId);
         }
         return back()->withErrors([
-            'text_error' => $isValidText ? 'Algo ha fallado, vuelve a intentarlo' : 'Recuerda que debes poner un comentario entre 0 y 65535 carácteres...',
+            'text_error' => $isValidText ? $this->getGenericError() : $this->getTopicTextLengthError(),
         ]);
     }
 

@@ -9,11 +9,22 @@ use App\Models\Comment;
 use App\Models\Topic;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\ErrorTextTrait;
+
 
 class CommentController extends Controller
 {
-    // En algunas vistas como la vista de creación de topic, no necesitamos revisar si el usuario está logeado, debido a que en el
-    // router (routes/web.php) el middleware ya nos verifica si el usuario está autenticado, en caso contrario lo redirige al login automáticamente.
+    /* 
+     * Nos permite acceder al trait (funciones genericas de toda la app), este trait en concreto
+     * nos va a devolver los textos de errores, así los tendremos centralizados y no hardcodeados en la app...
+     * Para que de un vistazo cambiemos los textos de errores genéricos de la app
+     */
+    use ErrorTextTrait; 
+
+    /*
+     * Info adicional: En algunas vistas como la vista de creación de topic, no necesitamos revisar si el usuario está logeado, debido a que en el
+     * router (routes/web.php) el middleware ya nos verifica si el usuario está autenticado, en caso contrario lo redirige al login automáticamente.
+     */
     
     // Enlaza la vista para crear los comentarios
     public function createCommentView($id): View{
@@ -38,10 +49,10 @@ class CommentController extends Controller
             $comment->save();
             return redirect('/topic/' . $topicId);
         } else {
-            $genericError = "¡Vaya! Algo ha fallado...";
-            $textError = "Tu comentario es demasiado largo o demasiado corto, debes poner entre 0 y 65535 carácteres...";
+            $genericError = $this->getGenericError();
+            $textError = $this->getCommentTextLengthError();
             return back()->withErrors([
-                // Si el texto es válido, poner un error genérico, de lo contrario informa que el comentario es o muy corto o muy largo.
+                // Si el texto es válido, pone un error genérico, de lo contrario informa que el comentario es o muy corto o muy largo.
                 'text_error' => $isValidText ? $genericError : $textError,
             ]);
         }
@@ -57,7 +68,7 @@ class CommentController extends Controller
             ]);
         } else {
             return back()->withErrors([
-                'malicious_edit_error' => '¡Eps! Estás intentando editar un comentario que no es tuyo? :(',
+                'malicious_edit_error' => $this->getCommentMaliciousEdit(),
             ]);
         }        
     }
@@ -71,8 +82,11 @@ class CommentController extends Controller
             $comment->update(['text' => $request->text]);
             return redirect('/topic/' . $topicId);
         }
+        $genericError = $this->getGenericError();
+        $textError = $this->getCommentTextLengthError();
+
         return back()->withErrors([
-            'text_error' => $isValidText ? 'Algo ha fallado, vuelve a intentarlo' : 'Recuerda que debes poner un comentario entre 0 y 65535 carácteres...',
+            'text_error' => $isValidText ? $genericError : $textError
         ]);
     }
     
@@ -87,7 +101,7 @@ class CommentController extends Controller
         }
 
         return redirect('/topic/' . $topicId)->withErrors([
-            'malicious_delete' => 'No intentes borrar un comentario que no es tuyo!'
+            'malicious_delete' => $this->getCommentMaliciousDelete()
         ]);
     }
 
