@@ -22,7 +22,7 @@
                     <input type="password" name="password" placeholder="Contraseña" data-form-field="password" class="form-control" id="password">
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-                    <button type="submit" class="btn btn-primary display-7">Enviar</button>
+                    <button type="submit" class="btn btn-primary display-7">Registrar</button>
                 </div>
                 @error('title')
                     <div class="alert alert-danger">{{ $message }}</div>

@@ -1,36 +1,29 @@
 @extends('layout.head_layout')
 
 @section('content')
-    <h1>Edita el topic</h1>
-    <br>
-
-    <form method="POST" action="{{ route('edit_topic', [$topic->id]) }}">
+    <div class="mbr-section-head mb-2">
+        <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2"><strong>Edita el topic</strong></h3>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8 mx-auto mbr-form">
+        </div>
+    </div>
+    <form method="POST" action="{{ route('edit_topic', [$topic->id]) }}" class="mbr-form form-with-styler">
         @csrf
         {{ method_field('PATCH') }}
-        <label for="title">Title</label>
-        <textarea  id="title"
-            type="text"
-            name="title"
-            value="{{$topic->title}}"
-            class="@error('text') is-invalid @else is-valid @enderror"
-            style="width:300px; height:150px; resize:none;  ">
-            {{$topic->title}}
-        </textarea>
-        <br>
+        <div class="col-12 form-group mb-6" data-for="title">
+            <input type="text" name="title" value="{{$topic->title}}" data-form-field="title" class="form-control" id="title">
+        </div>
 
-        <label for="text">Text</label>
-        <textarea  id="text"
-            type="text"
-            name="text"
-            value="{{$topic->topic_text}}"
-            class="@error('text') is-invalid @else is-valid @enderror"
-            style="width:300px; height:150px; resize:none;  ">
-            {{$topic->topic_text}}
-        </textarea>
-        <br>
-
-        <input type="submit" value="Submit">
-
+        <div class="col-12 form-group mb-6" data-for="topic_text">
+            <textarea type="text" name="text" placeholder="Añade el texto del topic" 
+                data-form-field="topic_text" class="form-control" id="topic_text"
+                style="resize:none; height: 400px">{{$topic->topic_text}}</textarea>
+                
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
+            <button type="submit" class="btn btn-primary display-7">Editar topic</button>
+        </div>
         @error('text_error')
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror

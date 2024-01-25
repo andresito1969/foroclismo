@@ -1,12 +1,3 @@
-<!--<div>
-    <a href="{{ route('login')}}">Login</a>
-    <a href="{{ route('register_view')}}">Register</a>
-    <a href="{{ route('home')}}">Home</a>
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
-</div>-->
 <section data-bs-version="5.1" class="menu menu2 cid-tJS6tZXiPa" once="menu" id="menu02-0">
 	<nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
         <a class="nav-link link text-black text-primary display-4" href="{{ route('home')}}">

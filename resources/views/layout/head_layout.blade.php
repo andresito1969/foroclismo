@@ -21,7 +21,7 @@
     <body>
         @extends('layout.navbar') 
         <!--Generic App layout-->
-        <section data-bs-version="5.1" class="header7 cid-tLeaLmEeFr" id="header07-h" style="margin-top: 10%">
+        <section data-bs-version="5.1" class="header7 cid-tLeaLmEeFr" id="header07-h" style="margin-top: 10%; background-color: #fcfcf2">
             <div class="align-center container">
                 <div class="row justify-content-center">
                     <div class="mbr-figure col-12 col-md-12">
@@ -32,7 +32,7 @@
         </section>
 
         <!-- Form layout para register y login-->
-        <section data-bs-version="5.1" class="form5 cid-tJS9pBcTSa" id="form02-6" style="margin-top: 5%">
+        <section data-bs-version="5.1" class="form5 cid-tJS9pBcTSa" id="form02-6" style="margin-top: 5%;">
             <div class="container">
                 @yield('form')
             </div>

@@ -1,4 +1,12 @@
 @charset "UTF-8";
+.delete-form {
+  display: inline-block;
+}
+.button {
+  text-decoration: none; 
+  color:black;
+  background-color: none;
+}
 section {
   background-color: #ffffff;
 }
