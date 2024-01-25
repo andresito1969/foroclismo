@@ -23,4 +23,7 @@
             </form>
         </div>
     </div>
+    @error('ban_message')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
 @endsection

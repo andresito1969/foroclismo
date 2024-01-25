@@ -56,8 +56,13 @@ class UserController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required']
         ]);
-
         if(Auth::attempt($credentials)){
+            if(Auth::user()->banned_user) {
+                $this->logoutShared($request);
+                return back()->withErrors([
+                    'ban_message' => 'vaya parece que has sido baneado :('
+                ]);
+            }
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
@@ -68,14 +73,29 @@ class UserController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request): RedirectResponse {
-
+    private function logoutShared($request) : void {
         Auth::logout();
     
         $request->session()->invalidate();
     
         $request->session()->regenerateToken();
+    }
+
+    public function logout(Request $request): RedirectResponse {
+
+        $this->logoutShared($request);
     
         return redirect('/');
+    }
+
+    public function banUser($userId) {
+        if(!Auth::user()->is_admin) {
+            return redirect('/');
+        }
+
+        $user = User::findOrFail($userId);
+        $user->update(['banned_user' => true]);
+
+        return back()->with('success_ban_message', $user->email . ' ha sido baneado satisfactoriamente');
     }
 }

@@ -61,8 +61,9 @@ class CommentController extends Controller
     public function editCommentView(Request $request, $topicId, $commentId) {
         $comment = Comment::findOrFail($commentId);
         $isValidUserId = $this->checkValidAuthUser($comment->user_id);
+        $userHasRights = $this->hasTheUserRights();
 
-        if(Auth::user()->is_admin || $isValidUserId) {
+        if($userHasRights || $isValidUserId) {
             return view('comment.edit_comment', [
                 'topic_id' => $topicId,
                 'comment' => $comment
@@ -79,7 +80,9 @@ class CommentController extends Controller
         $isValidTopic = $this->isValidTopic($topicId);
         $comment = Comment::findOrFail($commentId);
         $isValidUserId = $this->checkValidAuthUser($comment->user_id);
-        if((Auth::user()->is_admin || $isValidUserId) && $isValidTopic && $isValidText) {
+        $userHasRights = $this->hasTheUserRights();
+        
+        if(($userHasRights || $isValidUserId) && $isValidTopic && $isValidText) {
             $comment->update(['text' => $request->text]);
             return redirect('/topic/' . $topicId);
         }

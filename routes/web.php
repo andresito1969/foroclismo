@@ -65,5 +65,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'topic'], function() {
 
 // PERFIL DEL USUARIO
 Route::get('/user/{user_id}', [UserController::class, 'show'])->name('profile');
+Route::patch('/user/{user_id}/ban', [UserController::class, 'banUser'])->name('ban_user')->middleware('auth');
 // editar 
 // eliminar

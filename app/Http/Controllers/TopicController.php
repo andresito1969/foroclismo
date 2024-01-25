@@ -55,7 +55,7 @@ class TopicController extends Controller
             'comments' => $commentList,
             'isLogged' => $isLogged,
             'user_id' => $isLogged ? Auth::user()->id : 0,
-            'isAdmin' => $isLogged ? Auth::user()->is_admin : 0
+            'userHasRights' => $isLogged ? $this->hasTheUserRights() : 0
         ]);
     }
 
@@ -88,7 +88,9 @@ class TopicController extends Controller
     public function deleteTopic($topicId) {
         $topic = Topic::findOrFail($topicId);
         $isValidUser = $this->checkValidAuthUser($topic->user_id);
-        if((Auth::user()->is_admin || $isValidUser) && $topic) {
+        $userHasRights = $this->hasTheUserRights();
+
+        if(($userHasRights || $isValidUser) && $topic) {
             $topic->comments()->delete(); // esta línea nos va a permitir borrar los comentarios asociados al topic, de lo contrario vamos a tener una incosistencia!
             $topic->delete();
         }
@@ -98,8 +100,9 @@ class TopicController extends Controller
 
     public function editTopicView(Request $request, $topicId) {
         $topic = Topic::findOrFail($topicId);
+        $userHasRights = $this->hasTheUserRights();
         $isValidUserId = $this->checkValidAuthUser($topic->user_id);
-        if(Auth::user()->is_admin || $isValidUserId) {
+        if($userHasRights || $isValidUserId) {
             return view('topic.edit_topic', [
                 'topic' => $topic
             ]);
@@ -115,7 +118,9 @@ class TopicController extends Controller
         $topic = Topic::findOrFail($topicId);
         $isValidTitle = Topic::titleLengthCheck($request->title);
         $isValidUserId = $this->checkValidAuthUser($topic->user_id);
-        if((Auth::user()->is_admin || $isValidUserId) && $isValidText && $isValidTitle) {
+        $userHasRights = $this->hasTheUserRights();
+         
+        if(($userHasRights || $isValidUserId) && $isValidText && $isValidTitle) {
             $topic->update([
                 'topic_text' => $request->text,
                 'title' => $request->title
