@@ -1,7 +1,7 @@
 @extends('layout.head_layout')
 
 @section('content')
-    <div class="mbr-section-head mb-2">
+<div class="mbr-section-head mb-2">
         <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2"><strong>Edita el comentario</strong></h3>
     </div>
 

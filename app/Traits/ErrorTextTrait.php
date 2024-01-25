@@ -2,6 +2,7 @@
 namespace App\Traits;
 use App\Models\Comment;
 use App\Models\Topic;
+use App\Models\User;
 
 
 trait ErrorTextTrait {
@@ -43,5 +44,20 @@ trait ErrorTextTrait {
 
     public function getTopicMaliciousDelete() {
         return 'No intentes borrar un comentario que no es tuyo!';
+    }
+
+    /*
+     * Text errors de user
+     */
+    public function getNameError() {
+        return 'Recuerda que tienes que poner un nombre y como máximo de ' . User::maxLengthName . ' caracteres';
+    }
+
+    public function getLastNameError() {
+        return 'Recuerda que tienes que poner un apellido y como máximo de ' . User::maxLengthLastName . ' caracteres';
+    }
+
+    public function getPasswordError() {
+        return 'Recuerda que la contraseña tiene que ser mayor a ' . User::minLengthPassword . ' e inferior a ' . User::maxLengthPassword . ' caracteres';
     }
 }

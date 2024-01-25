@@ -82,7 +82,7 @@ class TopicController extends Controller
         return back()->withErrors([
             'text_error' => $isValidText ? '' : $this->getTopicTextLengthError(),
             'title_error' => $isValidTitle ? '' : $this->getTopicTitleLengthError(),
-        ]);
+        ])->withInput();
     }
 
     public function deleteTopic($topicId) {

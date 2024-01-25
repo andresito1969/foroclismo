@@ -10,7 +10,7 @@
         <div class="col-12 form-group mb-6" data-for="name">
             <textarea type="text" name="text" placeholder="Añade tu comentario aquí!" 
                         data-form-field="text" class="form-control" id="text"
-                        style="resize:none; height: 400px"></textarea>
+                        style="resize:none; height: 400px">{{ old('text') }}</textarea>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
             <button type="submit" class="btn btn-primary display-7">Crear</button>

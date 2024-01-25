@@ -9,12 +9,14 @@
             <form method="POST" action="{{ route('create_topic') }}" class="mbr-form form-with-styler">
                 @csrf
                 <div class="col-12 form-group mb-6" data-for="title">
-                    <input type="text" name="title" placeholder="Añade tu título" data-form-field="title" class="form-control" id="title">
+                    <input type="text" name="title" placeholder="Añade tu título" 
+                    data-form-field="title" class="form-control" 
+                    id="title" value="{{ old('title') }}">
                 </div>
                 <div class="col-12 form-group mb-6" data-for="topic_text">
                     <textarea type="text" name="topic_text" placeholder="Añade el texto del topic" 
                         data-form-field="topic_text" class="form-control" id="topic_text"
-                        style="resize:none; height: 400px"></textarea>
+                        style="resize:none; height: 400px">{{ old('topic_text') }}</textarea>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
                     <button type="submit" class="btn btn-primary display-7">Crear topic</button>

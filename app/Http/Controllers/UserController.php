@@ -31,16 +31,24 @@ class UserController extends Controller
     }
 
     public function register(Request $request) {
-        $user = new User([
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => $request->password
-        ]);
-
-        $user->save();
-
-        return redirect('/login');
+        $validPassword = User::passwordLengthCheck($request->password);
+        $validName = User::nameLengthCheck($request->name);
+        $validLastName = User::lastNameLengthCheck($request->last_name);
+        if($validPassword && $validName && $validLastName) {
+            $user = new User([
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => $request->password
+            ]);
+            $user->save();
+            return redirect('/login');
+        }
+        return back()->withErrors([
+            'password_error' => !$validPassword ? $this->getPasswordError() : '',
+            'name_error' => !$validName ? $this->getNameError() : '',
+            'last_name_error' => !$validLastName ? $this->getLastNameError() : '',
+        ])->withInput();
     }
 
     public function login(Request $request) {

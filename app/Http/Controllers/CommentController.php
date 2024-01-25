@@ -49,14 +49,13 @@ class CommentController extends Controller
             ]);
             $comment->save();
             return redirect('/topic/' . $topicId);
-        } else {
-            $genericError = $this->getGenericError();
-            $textError = $this->getCommentTextLengthError();
-            return back()->withErrors([
-                // Si el texto es válido, pone un error genérico, de lo contrario informa que el comentario es o muy corto o muy largo.
-                'text_error' => $isValidText ? $genericError : $textError,
-            ]);
-        }
+        } 
+        $genericError = $this->getGenericError();
+        $textError = $this->getCommentTextLengthError();
+        return back()->withErrors([
+            // Si el texto es válido, pone un error genérico, de lo contrario informa que el comentario es o muy corto o muy largo.
+            'text_error' => $isValidText ? $genericError : $textError,
+        ])->withInput();
     }
 
     public function editCommentView(Request $request, $topicId, $commentId) {
