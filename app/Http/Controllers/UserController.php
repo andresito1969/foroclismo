@@ -94,8 +94,10 @@ class UserController extends Controller
         }
 
         $user = User::findOrFail($userId);
-        $user->update(['banned_user' => true]);
+        $isBannedUser = $user->banned_user;
+        $user->update(['banned_user' => !$isBannedUser]);
+        $message = $isBannedUser ? 'desbaneado' : 'baneado';
 
-        return back()->with('success_ban_message', $user->email . ' ha sido baneado satisfactoriamente');
+        return back()->with('success_ban_message', $user->email . ' ha sido ' . $message . ' satisfactoriamente');
     }
 }

@@ -6,7 +6,8 @@
             @csrf
             {{ method_field('PATCH') }}
             <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
-                <button type="submit" class="btn btn-primary display-7"><span class="material-symbols-outlined">manage_accounts</span></button>
+                <button type="submit" class="btn btn-primary display-7"
+                        title="Banea o desbanea el usuario"><span class="material-symbols-outlined">manage_accounts</span></button>
             </div>
         </form>
     @endif
