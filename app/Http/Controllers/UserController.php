@@ -88,16 +88,14 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function banUser($userId, $status) {
+    public function banUser($userId) {
         if(!Auth::user()->is_admin) {
             return redirect('/');
         }
 
         $user = User::findOrFail($userId);
-        $user->update(['banned_user' => $status]);
+        $user->update(['banned_user' => true]);
 
-        $banMessage = $status ? $this->getBannedUser($user->email) : $this->getUnBannedUser($user->email);
-        return back()->with('ban_message', $banMessage);
+        return back()->with('success_ban_message', $user->email . ' ha sido baneado satisfactoriamente');
     }
-
 }

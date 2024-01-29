@@ -1,8 +1,8 @@
 @extends('layout.head_layout')
 
 @section('content')
-    @if((Auth::user() && Auth::user()->is_admin) && !$user->is_admin)
-        <form method="POST" action="{{ route('ban_user', [$user->id, 0]) }}">
+    @if(Auth::user() && Auth::user()->is_admin)
+        <form method="POST" action="{{ route('ban_user', [$user->id]) }}">
             @csrf
             {{ method_field('PATCH') }}
             <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
@@ -24,9 +24,9 @@
         <h1>Este usuario ha sido baneado del foro!</h1>
     </div>
     @endif
-    @if(session()->has('ban_message'))
+    @if(session()->has('success_ban_message'))
         <div class="alert alert-success">
-            {{ session()->get('ban_message') }}
+            {{ session()->get('success_ban_message') }}
         </div>
     @endif
 @endsection
