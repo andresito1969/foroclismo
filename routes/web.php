@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\CommentController;
+use App\Livewire\Counter;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,4 +68,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'topic'], function() {
 Route::get('/user/{user_id}', [UserController::class, 'show'])->name('profile');
 Route::patch('/user/{user_id}/ban/{status}', [UserController::class, 'banUser'])->name('ban_user')->middleware('auth');
 // editar 
-// eliminar
+
+
+Route::get('/counter', Counter::class);
