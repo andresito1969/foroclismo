@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\CommentController;
-use App\Livewire\Counter;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,31 +42,33 @@ Route::get('/topic/{topic_id}', [TopicController::class, 'showOne'])->name('sing
 
 
 // Agrupaciones por middleware y prefijo, así no tenemos que ir llamando al método middleware (que nos verifica si está autenticado el usuario)
-Route::group(['middleware' => 'auth', 'prefix' => 'topic'], function() {
-    
-    // GET Y POST (CREACIÓN) DE UN TOPIC
-    Route::get('/create/topic', [TopicController::class, 'createTopicView'])->name('create_topic_view');
-    Route::post('/create', [TopicController::class, 'createTopic'])->name('create_topic');
-    
-    // GET Y UPDATE DE UN TOPIC & BORRADO DEL TOPIC
-    Route::get('/{topic_id}/edit_topic', [TopicController::class, 'editTopicView'])->name('edit_topic_view');
-    Route::patch('/{topic_id}/edit_topic', [TopicController::class, 'editTopic'])->name('edit_topic');
-    Route::delete('/{topic_id}/delete', [TopicController::class, 'deleteTopic'])->name('delete_topic');  
-    Route::get('/{topic_id}/create_comment', [CommentController::class, 'createCommentView'])->name('create_comment_view');
-    Route::post('/{topic_id}/create_comment', [CommentController::class, 'createComment'])->name('create_comment');
+Route::group(['middleware' => ['auth', 'checkBannedUser']], function() {
+    // anidamos ruta por prefijo
+    Route::group(['prefix' => 'topic'], function(){
+        // GET Y POST (CREACIÓN) DE UN TOPIC
+        Route::get('/create/topic', [TopicController::class, 'createTopicView'])->name('create_topic_view');
+        Route::post('/create', [TopicController::class, 'createTopic'])->name('create_topic');
 
-    // GET & UPDATE & BORRADO DE COMENTARIO
-    Route::get('/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editCommentView'])->name('edit_comment_view');
-    Route::patch('/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editComment'])->name('edit_comment');
-    Route::delete('/{topic_id}/comment/{comment_id}', [CommentController::class, 'deleteComment'])->name('delete_comment');  
+        // GET Y UPDATE DE UN TOPIC & BORRADO DEL TOPIC
+        Route::get('/{topic_id}/edit_topic', [TopicController::class, 'editTopicView'])->name('edit_topic_view');
+        Route::patch('/{topic_id}/edit_topic', [TopicController::class, 'editTopic'])->name('edit_topic');
+        Route::delete('/{topic_id}/delete', [TopicController::class, 'deleteTopic'])->name('delete_topic');  
+        Route::get('/{topic_id}/create_comment', [CommentController::class, 'createCommentView'])->name('create_comment_view');
+        Route::post('/{topic_id}/create_comment', [CommentController::class, 'createComment'])->name('create_comment');
+
+        // GET & UPDATE & BORRADO DE COMENTARIO
+        Route::get('/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editCommentView'])->name('edit_comment_view');
+        Route::patch('/{topic_id}/edit_comment/{comment_id}', [CommentController::class, 'editComment'])->name('edit_comment');
+        Route::delete('/{topic_id}/comment/{comment_id}', [CommentController::class, 'deleteComment'])->name('delete_comment'); 
+    });
+
+    // PERFIL DEL USUARIO
+    Route::get('/user/{user_id}', [UserController::class, 'show'])->name('profile');
+    Route::patch('/user/{user}/ban', [UserController::class, 'banUser'])->name('ban_user');
+    // editar ? Quizás
 });
 
 
 
-// PERFIL DEL USUARIO
-Route::get('/user/{user_id}', [UserController::class, 'show'])->name('profile');
-Route::patch('/user/{user}/ban', [UserController::class, 'banUser'])->name('ban_user')->middleware('auth');
-// editar 
 
 
-Route::get('/counter', Counter::class);

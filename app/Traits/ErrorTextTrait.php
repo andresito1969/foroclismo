@@ -60,4 +60,11 @@ trait ErrorTextTrait {
     public function getPasswordError() {
         return 'Recuerda que la contraseña tiene que ser mayor a ' . User::minLengthPassword . ' e inferior a ' . User::maxLengthPassword . ' caracteres';
     }
+
+    /*
+     * Banned Message
+     */
+    public function getBannedUser() {
+        return 'vaya parece que has sido baneado :(';
+    }
 }
