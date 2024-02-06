@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Traits\ErrorTextTrait;
+use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
@@ -42,7 +43,8 @@ class UserController extends Controller
                 'password' => $request->password
             ]);
             $user->save();
-            return redirect('/login');
+            //event(new Registered($user));
+            return redirect('/login')->with('created_user', 'Usuario creado con éxito, revisa el mail, para verificar!');
         }
         return back()->withErrors([
             'password_error' => !$validPassword ? $this->getPasswordError() : '',

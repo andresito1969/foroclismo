@@ -26,4 +26,9 @@
     @error('ban_message')
         <div class="alert alert-danger">{{ $message }}</div>
     @enderror
+    @if(session()->has('created_user'))
+        <div class="alert alert-success">
+            {{ session()->get('created_user') }}
+        </div>
+    @endif
 @endsection

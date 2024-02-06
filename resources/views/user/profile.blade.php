@@ -30,5 +30,10 @@
             {{ session()->get('success_ban_message') }}
         </div>
     @endif
+    @if(session()->has('success_verification'))
+        <div class="alert alert-success">
+            {{ session()->get('success_verification') }}
+        </div>
+    @endif
 @endsection
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />

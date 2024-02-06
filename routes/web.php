@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\CommentController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,22 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 
+// EMAIL VERIFICATION
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect()->route('profile', [$request->user()->id])->with('success_verification', 'Te has verificado con éxito!');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+ 
+    return back()->with('message', 'Link de verficación enviado!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 /*
  * TOPICS & ÚNICO TOPIC & CREACIÓN/ACTUALIZACIÓN/BORRADO
@@ -42,7 +60,7 @@ Route::get('/topic/{topic_id}', [TopicController::class, 'showOne'])->name('sing
 
 
 // Agrupaciones por middleware y prefijo, así no tenemos que ir llamando al método middleware (que nos verifica si está autenticado el usuario)
-Route::group(['middleware' => ['auth', 'checkBannedUser']], function() {
+Route::group(['middleware' => ['auth', 'checkBannedUser', 'verified']], function() {
     // anidamos ruta por prefijo
     Route::group(['prefix' => 'topic'], function(){
         // GET Y POST (CREACIÓN) DE UN TOPIC
