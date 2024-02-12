@@ -1,5 +1,5 @@
 <?php
-namespace App\OrderTest;
+namespace App\Services\OrderTest;
 use App\Services\BillingTest\PaymentContract;
 
 class Order {
