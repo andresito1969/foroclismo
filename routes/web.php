@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +69,4 @@ Route::group(['middleware' => ['auth', 'checkBannedUser']], function() {
     // editar ? Quizás
 });
 
-
-
-
-
+Route::get('test', [TestController::class, 'test']);

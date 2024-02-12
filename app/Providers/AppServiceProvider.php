@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\BillingTest\BankPayment;
+use App\BillingTest\CreditPayment;
+use App\BillingTest\PaymentContract;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleTon(PaymentContract::class, function($app) {
+            if(request()->has('credit')) {
+                return new CreditPayment('usd');
+            }
+            return new BankPayment('usd');
+        });
     }
 
     /**
