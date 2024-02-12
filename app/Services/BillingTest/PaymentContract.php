@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BillingTest;
+namespace App\Services\BillingTest;
 
 interface PaymentContract {
     public function setDiscount($amount);

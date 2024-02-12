@@ -1,5 +1,5 @@
 <?php
-namespace App\BillingTest;
+namespace App\Services\BillingTest;
 
 class CreditPayment implements PaymentContract{
     private $currency;

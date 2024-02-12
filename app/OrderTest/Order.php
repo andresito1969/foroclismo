@@ -1,6 +1,6 @@
 <?php
 namespace App\OrderTest;
-use App\BillingTest\PaymentContract;
+use App\Services\BillingTest\PaymentContract;
 
 class Order {
     private $pay;
