@@ -7,7 +7,7 @@ trait UtilsTrait {
         return $userId == Auth::user()->id;
     }
 
-    private function hasTheUserRights() {
+    private function isSuperUser() {
         return Auth::user()->is_admin || Auth::user()->is_mod;
     }
 }

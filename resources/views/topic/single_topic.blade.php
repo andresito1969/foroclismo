@@ -5,7 +5,7 @@
         <div class="mbr-section-head mb-2" style="display: inline-block">
             <h3 class="mbr-section-title mbr-fonts-style align-center mb-0 display-2"><strong>{{$topic->title}}</strong></h3>
         </div>
-        @if($topic->user_id == $user_id || $userHasRights)
+        @if($topic->user_id == $user_id || $isSuperUser)
             <a href="{{ route('edit_topic_view', [$topic->id]) }}" class="button"><span class="material-symbols-outlined">edit</span></a>
             <form method="POST" action="{{ route('delete_topic', [$topic->id]) }}" class="delete-form">
                 @csrf
@@ -24,7 +24,7 @@
             <div>
                 <h3>{{$comment->text}} #{{$loop->index + 1}}</h2>
                 Comentario hecho por: <a href="{{ route('profile', [$comment->user_id]) }}">{{$comment->name}} {{$comment->last_name}}</a>
-                @if($comment->user_id == $user_id || $userHasRights)
+                @if($comment->user_id == $user_id || $isSuperUser)
                     <a href="{{ route('edit_comment_view', [$topic->id, $comment->id]) }}" class="button"><span class="material-symbols-outlined">edit</span></a>
                     <!-- 
                         Por defecto y por temas de seguridad, laravel trata cada link o cada acción enrutadora como método GET, por ende
