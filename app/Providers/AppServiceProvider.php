@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\BillingTest\BankPayment;
-use App\BillingTest\CreditPayment;
-use App\BillingTest\PaymentContract;
+use App\Services\BillingTest\BankPayment;
+use App\Services\BillingTest\CreditPayment;
+use App\Services\BillingTest\PaymentContract;
 
 class AppServiceProvider extends ServiceProvider
 {

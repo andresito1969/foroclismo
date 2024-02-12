@@ -5,7 +5,7 @@ use App\Models\Topic;
 use Illuminate\Support\Facades\Auth;
 
 
-class TopicRepository {
+class TopicRepository implements TopicRepositoryInterface{
 
     public function createTopic(array $data) : void {
         $topic = new Topic([

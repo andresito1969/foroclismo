@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Traits\ErrorTextTrait;
 use App\Traits\UtilsTrait;
 
-use App\Repositories\TopicRepository;
+use App\Repositories\TopicRepositoryInterface;
 use App\Repositories\CommentRepository;
 
 
@@ -23,7 +23,7 @@ class TopicController extends Controller
 
     private $topicRepository, $commentRepository;
 
-    public function __construct(TopicRepository $topicRepository, CommentRepository $commentRepository) {
+    public function __construct(TopicRepositoryInterface $topicRepository, CommentRepository $commentRepository) {
         $this->topicRepository = $topicRepository;
         $this->commentRepository = $commentRepository;
     }
