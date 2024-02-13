@@ -10,7 +10,10 @@ Laravel forum created for learning purposes
             Migrations, seedings, eloquent and Factories
     
         Unit testing
-    
+
+        PHP:
+            Traits, interfaces
+        
         Directory pattern for laravel
         
         Architecture:
