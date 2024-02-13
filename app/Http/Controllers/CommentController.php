@@ -75,7 +75,7 @@ class CommentController extends Controller
             ]);
         } else {
             return back()->withErrors([
-                'malicious_edit_error' => $this->getCommentMaliciousEdit(),
+                'malicious_edit_error' => $this->getCommentMaliciousEditError(),
             ]);
         }        
     }
@@ -110,7 +110,7 @@ class CommentController extends Controller
         }
 
         return redirect('/topic/' . $topicId)->withErrors([
-            'malicious_delete' => $this->getCommentMaliciousDelete()
+            'malicious_delete' => $this->getCommentMaliciousDeleteError()
         ]);
     }
 
