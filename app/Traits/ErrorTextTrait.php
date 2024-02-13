@@ -7,7 +7,8 @@ use App\Models\User;
 
 trait ErrorTextTrait {
 
-
+    // TODO : There's a better way for sure of implementing and avoid traits.
+    
     public function getGenericError() {
         return "¡Vaya! Algo ha fallado...";
     }
