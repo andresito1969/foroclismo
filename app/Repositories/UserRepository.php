@@ -14,14 +14,14 @@ class UserRepository implements UserRepositoryInterface {
     }
 
     public function pwLengthCheck($password) {
-        return User::passwordLengthCheck($password);
+        return strlen($password) > User::minLengthPassword && strlen($password) <= User::maxLengthPassword;
     }
 
     public function nameLengthCheck($name) {
-        return User::nameLengthCheck($name);
+        return strlen($name) > 0 && strlen($name) <= User::maxLengthName;
     }
 
     public function lastNameLengthCheck($lastName){
-        return User::lastNameLengthCheck($lastName);
+        return strlen($lastName) > 0 && strlen($lastName) <= User::maxLengthLastName;
     }
 }

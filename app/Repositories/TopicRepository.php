@@ -34,10 +34,12 @@ class TopicRepository implements TopicRepositoryInterface{
     }
 
     public function getTitleLengthCheck(array $data) {
-        return Topic::titleLengthCheck($data['title']);
+        $title = $data['title'];
+        return strlen($title) > 0 && strlen($title) <= Topic::maxLengthTitle;
     }
 
     public function getTextLengthCheck(array $data) {
-        return Topic::textLengthCheck($data['topic_text']);
+        $topicText = $data['topic_text'];
+        return strlen($topicText) > 0 && strlen($topicText) <= Topic::maxLengthText;
     }
 }

@@ -33,6 +33,6 @@ class CommentRepository implements CommentRepositoryInterface {
     }
 
     public function getTextLengthCheck($text) {
-        return Comment::textLengthCheck($text);
+        return strlen($text) > 0 && strlen($text) <= Comment::maxLengthText;
     }
 }

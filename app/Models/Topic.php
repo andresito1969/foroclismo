@@ -27,12 +27,4 @@ class Topic extends Model
     public function comments():HasMany {
         return $this->hasMany(Comment::class);
     }
-
-    public static function textLengthCheck($text) {
-        return strlen($text) > 0 && strlen($text) <= Topic::maxLengthText;
-    }
-
-    public static function titleLengthCheck($text) {
-        return strlen($text) > 0 && strlen($text) <= Topic::maxLengthTitle;
-    }
 }
