@@ -6,10 +6,12 @@ use App\Models\Topic;
 
 class TopicRepository implements TopicRepositoryInterface{
 
-    public function createTopic(array $data) : void {
+    public function createTopic(array $data) {
         $topic = new Topic($data);
 
         $topic->save();
+
+        return $topic;
     }
 
     public function getAllTopics() {

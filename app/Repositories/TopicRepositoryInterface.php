@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 interface TopicRepositoryInterface{
-    public function createTopic(array $data) : void;
+    public function createTopic(array $data);
 
     public function getAllTopics();
 

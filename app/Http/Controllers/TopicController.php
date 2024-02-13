@@ -58,18 +58,18 @@ class TopicController extends Controller
     public function createTopic(Request $request) {
         $isValidTitle = $this->topicRepository->getTitleLengthCheck(['title' => $request->title]);
         $isValidText = $this->topicRepository->getTextLengthCheck(['topic_text' => $request->topic_text]);
-
         if(Auth::check() && $isValidTitle && $isValidText) {
-            $this->topicRepository->createTopic([
+            $topic = $this->topicRepository->createTopic([
                 'title' => $request->title,
                 'topic_text' => $request->topic_text,
                 'user_id' => Auth::id()
             ]);
+
     
-            return redirect('/');
+            return redirect('/topic/' . $topic->id);
         }
         
-        return back()->withErrors([
+        return redirect('/topic/create/topic')->withErrors([
             'text_error' => $isValidText ? '' : $this->getTopicTextLengthError(),
             'title_error' => $isValidTitle ? '' : $this->getTopicTitleLengthError(),
         ])->withInput();

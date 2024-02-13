@@ -62,6 +62,10 @@ trait ErrorTextTrait {
         return 'Recuerda que la contraseña tiene que ser mayor a ' . User::minLengthPassword . ' e inferior a ' . User::maxLengthPassword . ' caracteres';
     }
 
+    public function getDupMailError() {
+        return 'Vaya, parece que el mail que intentas poner ya está en uso :(';
+    }
+
     /*
      * Banned Message
      */
