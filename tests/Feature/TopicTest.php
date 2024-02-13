@@ -42,7 +42,6 @@ class TopicTest extends TestCase
 
         $topic = Topic::where('user_id', $user->id);
         
-        // Borra los datos que acabamos de crear, para evitar inconsistencias
         $topic->delete();
         $user->delete();
 
@@ -69,7 +68,6 @@ class TopicTest extends TestCase
 
         $topic = Topic::where('user_id', $user->id);
         
-        // Borra los datos que acabamos de crear, para evitar inconsistencias
         $topic->delete();
         $user->delete();
 
