@@ -12,15 +12,28 @@ class LogSessionUserTest extends TestCase
 {
     /**
      * Test user login.
+     * We check the redirections only, so if it's a succeed we will go to the home (/) 
+     * otherwise if it's not successful, we will stay in the same page (''), because errors redirect back.
      */
     public function test_correct_login(): void
     {
         $response = $this->post('/login', [
-            'email' => 'juan_gomez@foroclismo.com',
-            'password' => 'test'
+            'email' => 'admin@foroclismo.com',
+            'password' => 'test12'
         ]);
 
         $response->assertRedirect('/');
+
+    }
+
+    public function test_incorrect_bannedUser_login(): void
+    {
+        $response = $this->post('/login', [
+            'email' => 'banned@foroclismo.com',
+            'password' => 'test12'
+        ]);
+
+        $response->assertRedirect('/login');
 
     }
 
@@ -31,7 +44,7 @@ class LogSessionUserTest extends TestCase
             'password' => 'test2323231'
         ]);
 
-        $response->assertRedirect(''); // Porque ni redirecciona a la "/home o /", ni redirecciona al /login, simplemente se queda donde está
+        $response->assertRedirect('/login');
     }
 
     public function test_incorrect_login_wrong_password(): void
@@ -41,7 +54,7 @@ class LogSessionUserTest extends TestCase
             'password' => 'test2323231'
         ]);
 
-        $response->assertRedirect(''); 
+        $response->assertRedirect('/login'); 
     }
 
     public function test_incorrect_login_empty_password(): void
@@ -50,7 +63,7 @@ class LogSessionUserTest extends TestCase
             'email' => 'juan_gomez@foroclismo.com',
         ]);
 
-        $response->assertRedirect(''); 
+        $response->assertRedirect('/login'); 
     }
 
     public function test_incorrect_login_empty_mail(): void
@@ -59,6 +72,6 @@ class LogSessionUserTest extends TestCase
             'password' => 'test2323231'
         ]);
 
-        $response->assertRedirect(''); 
+        $response->assertRedirect('/login'); 
     }
 }

@@ -58,22 +58,25 @@ class UserController extends Controller
     }
 
     public function login(Request $request) {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
-        ]);
-        if(Auth::attempt($credentials)){
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+        $isValidAuth = Auth::attempt($credentials);
+
+        if($isValidAuth){
             if(Auth::user()->banned_user) {
                 $this->logoutShared($request);
-                return back()->withErrors([
+                return redirect('/login')->withErrors([
                     'ban_message' => $this->getBannedUserError()
                 ]);
             }
+
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
-        return back()->withErrors([
+        return redirect('/login')->withErrors([
             'email' => $this->getGenericError()
         ])->onlyInput('email');
     }
