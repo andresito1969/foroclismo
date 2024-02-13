@@ -66,7 +66,7 @@ class UserController extends Controller
             if(Auth::user()->banned_user) {
                 $this->logoutShared($request);
                 return back()->withErrors([
-                    'ban_message' => $this->getBannedUser()
+                    'ban_message' => $this->getBannedUserError()
                 ]);
             }
             $request->session()->regenerate();

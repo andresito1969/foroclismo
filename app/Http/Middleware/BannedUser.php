@@ -22,7 +22,7 @@ class BannedUser
         if(Auth::check() && Auth::user()->banned_user) {
             Auth::logout();
             return redirect('login')->withErrors([
-                'ban_message' => $this->getBannedUser()
+                'ban_message' => $this->getBannedUserError()
             ]);
         }
         return $next($request);
