@@ -48,3 +48,10 @@ php artisan make:test UserTest -> nos creará un fichero de test en la carpeta F
 php artisan make:test UserTest --unit -> Nos lo creará en unit
 
 Idealmente un test debe hacer solo una petición, si intentamos añadir varias peticiones a un único test, podemos tener un comportamiento inesperado
+
+
+**Providers**
+    php artisan make:provider Test
+    php artisan config:clear
+    php artisan clear-compiled
+    composer dump-autoload

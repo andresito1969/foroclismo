@@ -7,7 +7,8 @@ use App\Models\User;
 
 trait ErrorTextTrait {
 
-
+    // TODO : There's a better way for sure of implementing and avoid traits.
+    
     public function getGenericError() {
         return "¡Vaya! Algo ha fallado...";
     }
@@ -19,11 +20,11 @@ trait ErrorTextTrait {
         return "Tu comentario es demasiado largo o demasiado corto, debes poner entre 1 y " . Comment::maxLengthText . " carácteres...";
     }
 
-    public function getCommentMaliciousDelete() {
+    public function getCommentMaliciousDeleteError() {
         return 'No intentes borrar un comentario que no es tuyo!';
     }
 
-    public function getCommentMaliciousEdit() {
+    public function getCommentMaliciousEditError() {
         return 'No intentes editar un comentario que no es tuyo!';
     }
 
@@ -42,7 +43,7 @@ trait ErrorTextTrait {
         return 'No intentes editar un topic que no es tuyo!';
     }
 
-    public function getTopicMaliciousDelete() {
+    public function getTopicMaliciousDeleteError() {
         return 'No intentes borrar un comentario que no es tuyo!';
     }
 
@@ -64,7 +65,7 @@ trait ErrorTextTrait {
     /*
      * Banned Message
      */
-    public function getBannedUser() {
+    public function getBannedUserError() {
         return 'vaya parece que has sido baneado :(';
     }
 }

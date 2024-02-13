@@ -58,14 +58,4 @@ class User extends Authenticatable
     public function comments(): HasMany {
         return $this->hasMany(Comment::class);
     }
-
-    public static function passwordLengthCheck($password) {
-        return strlen($password) > User::minLengthPassword && strlen($password) <= User::maxLengthPassword;
-    }
-    public static function nameLengthCheck($name) {
-        return strlen($name) > 0 && strlen($name) <= User::maxLengthName;;
-    }
-    public static function lastNameLengthCheck($lastName) {
-        return strlen($lastName) > 0 && strlen($lastName) <= User::maxLengthLastName;;
-    }
 }
