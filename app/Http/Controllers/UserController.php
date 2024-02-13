@@ -5,20 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\User;
 use Illuminate\View\View;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Traits\ErrorTextTrait;
 
+use App\Repositories\UserRepositoryInterface;
+
 class UserController extends Controller
 {
     use ErrorTextTrait;
 
-    public function show(string $id): View {
+    private $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository) {
+        $this->userRepository = $userRepository;
+    }
+
+    public function show($id): View {
         return view('user.profile', [
-            'user' => User::findOrFail($id)
+            'user' => $this->userRepository->getUserById($id)
         ]);
     }
 
@@ -31,17 +38,16 @@ class UserController extends Controller
     }
 
     public function register(Request $request) {
-        $validPassword = User::passwordLengthCheck($request->password);
-        $validName = User::nameLengthCheck($request->name);
-        $validLastName = User::lastNameLengthCheck($request->last_name);
+        $validPassword = $this->userRepository->pwLengthCheck($request->password);
+        $validName = $this->userRepository->nameLengthCheck($request->name);
+        $validLastName = $this->userRepository->lastNameLengthCheck($request->last_name);
         if($validPassword && $validName && $validLastName) {
-            $user = new User([
+            $this->userRepository->saveUser([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'password' => $request->password
             ]);
-            $user->save();
             return redirect('/login');
         }
         return back()->withErrors([
@@ -67,7 +73,6 @@ class UserController extends Controller
             return redirect()->intended('/');
         }
 
-
         return back()->withErrors([
             'email' => $this->getGenericError()
         ])->onlyInput('email');
@@ -82,7 +87,6 @@ class UserController extends Controller
     }
 
     public function logout(Request $request): RedirectResponse {
-
         $this->logoutShared($request);
     
         return redirect('/');
@@ -93,7 +97,7 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $user = User::findOrFail($userId);
+        $user = $this->userRepository->getUserById($userId);
         $isBannedUser = $user->banned_user;
         $user->update(['banned_user' => !$isBannedUser]);
         $message = $isBannedUser ? 'desbaneado' : 'baneado';
