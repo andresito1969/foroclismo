@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Comment;
-use App\Models\Topic;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\ErrorTextTrait;
 use App\Traits\UtilsTrait;
 
+use App\Repositories\CommentRepositoryInterface;
+use App\Repositories\TopicRepositoryInterface;
 
 class CommentController extends Controller
 {
@@ -22,6 +22,12 @@ class CommentController extends Controller
      */
     use ErrorTextTrait, UtilsTrait; 
 
+    private $topicRepository, $commentRepository;
+
+    public function __construct(TopicRepositoryInterface $topicRepository, CommentRepositoryInterface $commentRepository) {
+        $this->topicRepository = $topicRepository;
+        $this->commentRepository = $commentRepository;
+    }
     /*
      * Info adicional: En algunas vistas como la vista de creación de topic, no necesitamos revisar si el usuario está logeado, debido a que en el
      * router (routes/web.php) el middleware ya nos verifica si el usuario está autenticado, en caso contrario lo redirige al login automáticamente.
@@ -36,18 +42,17 @@ class CommentController extends Controller
     
     // Esta función nos permite crear comentarios
     public function createComment(Request $request, $topicId) {
-        $isValidText = Comment::textLengthCheck($request->text);
+        $isValidText = $this->commentRepository->getTextLengthCheck($request->text);
         $isAuthenticated = Auth::check();
         $isValidTopic = $this->isValidTopic($topicId);
 
         // Si no son correctas estas comprobaciones ejecuta el else.
         if($isValidText && $isAuthenticated && $isValidTopic) {
-            $comment = new Comment([
+            $this->commentRepository->createComment([
                 'text' => $request->text,
                 'user_id' => Auth::user()->id,
                 'topic_id' => $topicId
             ]);
-            $comment->save();
             return redirect('/topic/' . $topicId);
         } 
         $genericError = $this->getGenericError();
@@ -59,7 +64,7 @@ class CommentController extends Controller
     }
 
     public function editCommentView(Request $request, $topicId, $commentId) {
-        $comment = Comment::findOrFail($commentId);
+        $comment = $this->commentRepository->getSingleMessage($commentId);
         $isValidUserId = $this->checkValidAuthUser($comment->user_id);
         $isSuperUser = $this->isSuperUser();
 
@@ -76,14 +81,14 @@ class CommentController extends Controller
     }
 
     public function editComment(Request $request, $topicId, $commentId) {
-        $isValidText = Comment::textLengthCheck($request->text);
+        $isValidText = $this->commentRepository->getTextLengthCheck($request->text);
         $isValidTopic = $this->isValidTopic($topicId);
-        $comment = Comment::findOrFail($commentId);
+        $comment = $this->commentRepository->getSingleMessage($commentId);
         $isValidUserId = $this->checkValidAuthUser($comment->user_id);
         $isSuperUser = $this->isSuperUser();
         
         if(($isSuperUser || $isValidUserId) && $isValidTopic && $isValidText) {
-            $comment->update(['text' => $request->text]);
+            $this->commentRepository->update($comment, ['text' => $request->text]);
             return redirect('/topic/' . $topicId);
         }
         $genericError = $this->getGenericError();
@@ -95,12 +100,12 @@ class CommentController extends Controller
     }
     
     public function deleteComment(Request $request, $topicId, $commentId) {
-        $comment = Comment::findOrFail($commentId);
+        $comment = $this->commentRepository->getSingleMessage($commentId);
         $isValidUserId = $this->checkValidAuthUser($comment->user_id);
         $isValidTopic = $this->isValidTopic($topicId);
 
         if((Auth::user()->is_admin || $isValidUserId) && $isValidTopic) {
-            $comment->delete();
+            $this->commentRepository->delete($comment);
             return redirect('/topic/' . $topicId);
         }
 
@@ -110,6 +115,6 @@ class CommentController extends Controller
     }
 
     private function isValidTopic($id) {
-        return count(Topic::where("id", $id)->get());
+        return $this->topicRepository->getSingleTopic($id);
     }
 }

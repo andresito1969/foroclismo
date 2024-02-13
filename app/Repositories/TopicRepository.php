@@ -2,17 +2,12 @@
 
 namespace App\Repositories;
 use App\Models\Topic;
-use Illuminate\Support\Facades\Auth;
 
 
 class TopicRepository implements TopicRepositoryInterface{
 
     public function createTopic(array $data) : void {
-        $topic = new Topic([
-            'title' => $data['title'],
-            'topic_text' => $data['topic_text'],
-            'user_id' => Auth::id()
-        ]);
+        $topic = new Topic($data);
 
         $topic->save();
     }

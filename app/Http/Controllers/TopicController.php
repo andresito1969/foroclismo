@@ -13,7 +13,7 @@ use App\Traits\ErrorTextTrait;
 use App\Traits\UtilsTrait;
 
 use App\Repositories\TopicRepositoryInterface;
-use App\Repositories\CommentRepository;
+use App\Repositories\CommentRepositoryInterface;
 
 
 
@@ -23,7 +23,7 @@ class TopicController extends Controller
 
     private $topicRepository, $commentRepository;
 
-    public function __construct(TopicRepositoryInterface $topicRepository, CommentRepository $commentRepository) {
+    public function __construct(TopicRepositoryInterface $topicRepository, CommentRepositoryInterface $commentRepository) {
         $this->topicRepository = $topicRepository;
         $this->commentRepository = $commentRepository;
     }
@@ -62,7 +62,8 @@ class TopicController extends Controller
         if(Auth::check() && $isValidTitle && $isValidText) {
             $this->topicRepository->createTopic([
                 'title' => $request->title,
-                'topic_text' => $request->topic_text
+                'topic_text' => $request->topic_text,
+                'user_id' => Auth::id()
             ]);
     
             return redirect('/');
