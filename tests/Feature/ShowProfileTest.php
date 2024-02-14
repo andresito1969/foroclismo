@@ -10,20 +10,51 @@ use App\Models\User;
 
 class ShowProfileTest extends TestCase
 {
-    public function test_show_existent_profile(): void
-    {
-        $user = User::factory()->create();
+    private User $user;
+    protected function setUp() : void {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
+    protected function tearDown() : void {
+        $this->user->delete();
+        parent::tearDown();
+    }
+
+    public function test_show_existent_profile(): void {
+        $user = $this->user;
         $response = $this->actingAs($user)
                 ->withSession(['banned' => false])
                 ->get('/user/' . $user->id);
 
-        $user->delete();
         $response->assertStatus(200);
     }
 
     public function test_show_profile_incorrect_id(): void{
-        $response = $this->get('/user/-1');
+        $user = $this->user;
+        $response = $this->actingAs($user)
+                ->withSession(['banned' => false])
+                ->get('/user/-1');
+        $response->assertStatus(404);
+    }
 
-        $response->assertRedirect('/login');
+    public function test_show_incorrect_profile_no_auth() : void {
+        $response = $this->get('/user/-1');
+        $response->assertRedirect('login');
+    }
+
+    public function test_show_ban_button_profile(): void {
+        $this->user = User::factory()->create(['is_admin' => 1]);
+        $response = $this->actingAs($this->user)
+                ->withSession(['banned' => false])
+                ->get('/user/' . $this->user->id);
+        $response->assertSee('Banea');
+    }
+
+    public function test_dont_show_ban_button_profile(): void {
+        $response = $this->actingAs($this->user)
+                ->withSession(['banned' => false])
+                ->get('/user/' . $this->user->id);
+        $response->assertDontSee('Banea');
     }
 }
