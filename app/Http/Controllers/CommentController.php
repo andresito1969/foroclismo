@@ -108,10 +108,8 @@ class CommentController extends Controller
             $this->commentRepository->delete($comment);
             return redirect('/topic/' . $topicId);
         }
-
-        return redirect('/topic/' . $topicId)->withErrors([
-            'malicious_delete' => $this->getCommentMaliciousDeleteError()
-        ]);
+        
+        abort(404);
     }
 
     private function isValidTopic($id) {
