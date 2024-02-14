@@ -11,6 +11,23 @@ use App\Models\User;
 
 class TopicTest extends TestCase
 {
+    private User $user;
+    private Topic $topic;
+
+    protected function setUp() : void {
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->topic = Topic::factory()->create([
+            'user_id' => $this->user->id
+        ]);
+    }
+
+    protected function tearDown() : void {
+        $this->user->topics()->delete();
+        $this->user->delete();
+        parent::tearDown();
+    }
+
     public function test_show_existent_topic(): void
     {
 
@@ -31,7 +48,7 @@ class TopicTest extends TestCase
 
     // TODO: I SHOULD GO TO THE ROUTE NAME INSTEAD OF ABSOLUTE ROUTE (TOPIC/CREATE)
     public function test_create_topic(): void {
-        $user = User::factory()->create();
+        $user = $this->user;
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
             ->post('/topic/create', [
@@ -39,11 +56,6 @@ class TopicTest extends TestCase
                 'topic_text' => 'Esta es una prueba',
                 'user_id' => $user->id
             ]);
-
-        $topic = Topic::where('user_id', $user->id);
-        
-        $topic->delete();
-        $user->delete();
 
         $response->assertStatus(302);
     }
@@ -58,7 +70,7 @@ class TopicTest extends TestCase
     }
 
     public function test_incorrect_create_topic_missing_title(): void {
-        $user = User::factory()->create();
+        $user = $this->user;
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
             ->post('/topic/create', [
@@ -66,38 +78,25 @@ class TopicTest extends TestCase
                 'user_id' => $user->id
             ]);
 
-        $topic = Topic::where('user_id', $user->id);
-        
-        $topic->delete();
-        $user->delete();
-
         $response->assertRedirect('/topic/create/topic');
     }
 
     public function test_edit_topic() : void {
-        $user = User::factory()->create();
-        $topic = Topic::factory()->create([
-            'user_id' => $user->id
-        ]);
+        $user = $this->user;
+        $topic = $this->topic;
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
             ->patch('/topic/' . $topic->id . '/edit_topic', [
                 'text' => 'lel',
                 'title' => 'lal'
             ]);
-        
-
-        $topic->delete();
-        $user->delete();
 
         $response->assertRedirect('/topic/' . $topic->id);
     }
 
     public function test_incorrect_edit_topic_null_text() : void {
-        $user = User::factory()->create();
-        $topic = Topic::factory()->create([
-            'user_id' => $user->id
-        ]);
+        $user = $this->user;
+        $topic = $this->topic;
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
             ->patch('/topic/' . $topic->id . '/edit_topic', [
@@ -105,35 +104,27 @@ class TopicTest extends TestCase
                 'title' => 'lal'
             ]);
         
-
-        $topic->delete();
-        $user->delete();
-        
         $response->assertRedirect('');
     }
 
     public function test_delete_topic() : void {
-        $user = User::factory()->create();
-        $topic = Topic::factory()->create([
-            'user_id' => $user->id
-        ]);
+        $user = $this->user;
+        $topic = $this->topic;
 
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
             ->delete('/topic/' . $topic->id . '/delete');
 
-        $user->delete();
 
         $response->assertStatus(302);
     }
 
     public function test_incorrect_delete_topic_malicious_auth() : void {
-        $user = User::factory()->create();
+        $user = $this->user;
         $response = $this->actingAs($user)
             ->withSession(['banned' => false])
             ->delete('/topic/1/delete');
 
-        $user->delete();
         $response->assertStatus(404);
     }
 
