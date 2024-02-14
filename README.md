@@ -18,7 +18,7 @@ Laravel forum created for learning purposes
         PHP:
             Traits, interfaces
         
-        Directory pattern for laravel
+        Directory pattern for laravel.
         
         Architecture:
             Service container -> Used to configure all app, we can for example bind the instance of an interface and use the interface.
