@@ -82,9 +82,9 @@ class TopicController extends Controller
 
         if(($isSuperUser || $isValidUser) && $topic) {
             $this->topicRepository->deleteTopic($topic);
+            return redirect('/');
         }
-        
-        return redirect('/');
+        abort(404);
     }
 
     public function editTopicView(Request $request, $topicId) {

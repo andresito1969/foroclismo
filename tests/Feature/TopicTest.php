@@ -73,4 +73,73 @@ class TopicTest extends TestCase
 
         $response->assertRedirect('/topic/create/topic');
     }
+
+    public function test_edit_topic() : void {
+        $user = User::factory()->create();
+        $topic = Topic::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->patch('/topic/' . $topic->id . '/edit_topic', [
+                'text' => 'lel',
+                'title' => 'lal'
+            ]);
+        
+
+        $topic->delete();
+        $user->delete();
+
+        $response->assertRedirect('/topic/' . $topic->id);
+    }
+
+    public function test_incorrect_edit_topic_null_text() : void {
+        $user = User::factory()->create();
+        $topic = Topic::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->patch('/topic/' . $topic->id . '/edit_topic', [
+                'text' => '',
+                'title' => 'lal'
+            ]);
+        
+
+        $topic->delete();
+        $user->delete();
+        
+        $response->assertRedirect('');
+    }
+
+    public function test_delete_topic() : void {
+        $user = User::factory()->create();
+        $topic = Topic::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->delete('/topic/' . $topic->id . '/delete');
+
+        $user->delete();
+
+        $response->assertStatus(302);
+    }
+
+    public function test_incorrect_delete_topic_malicious_auth() : void {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->delete('/topic/1/delete');
+
+        $user->delete();
+        $response->assertStatus(404);
+    }
+
+    public function test_incorrect_delete_topic_not_logged() : void {
+        $response = $this->delete('/topic/1/delete');
+
+        $response->assertRedirect('login');
+    }
 }
