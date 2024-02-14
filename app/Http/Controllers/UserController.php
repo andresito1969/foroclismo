@@ -41,7 +41,15 @@ class UserController extends Controller
         $validPassword = $this->userRepository->pwLengthCheck($request->password);
         $validName = $this->userRepository->nameLengthCheck($request->name);
         $validLastName = $this->userRepository->lastNameLengthCheck($request->last_name);
+    
         if($validPassword && $validName && $validLastName) {
+            $isRegisteredUser = $this->userRepository->getUserByMail($request->email);
+
+            if($isRegisteredUser) {
+                return redirect('/register')->withErrors([
+                    'duplicated_mail_error' => $this->getDupMailError()
+                ])->withInput();
+            }
             $this->userRepository->saveUser([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
@@ -50,7 +58,7 @@ class UserController extends Controller
             ]);
             return redirect('/login');
         }
-        return back()->withErrors([
+        return redirect('/register')->withErrors([
             'password_error' => !$validPassword ? $this->getPasswordError() : '',
             'name_error' => !$validName ? $this->getNameError() : '',
             'last_name_error' => !$validLastName ? $this->getLastNameError() : '',
@@ -58,22 +66,25 @@ class UserController extends Controller
     }
 
     public function login(Request $request) {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
-        ]);
-        if(Auth::attempt($credentials)){
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+        $isValidAuth = Auth::attempt($credentials);
+
+        if($isValidAuth){
             if(Auth::user()->banned_user) {
                 $this->logoutShared($request);
-                return back()->withErrors([
+                return redirect('/login')->withErrors([
                     'ban_message' => $this->getBannedUserError()
                 ]);
             }
+
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
-        return back()->withErrors([
+        return redirect('/login')->withErrors([
             'email' => $this->getGenericError()
         ])->onlyInput('email');
     }

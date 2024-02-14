@@ -37,6 +37,9 @@
             @error('password_error')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
+            @error('duplicated_mail_error')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             @error('name_error')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror

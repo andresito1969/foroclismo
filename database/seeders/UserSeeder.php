@@ -36,5 +36,13 @@ class UserSeeder extends Seeder
             'is_mod' => 1,
             'password' => bcrypt('test12')
         ]);
+
+        DB::table('users')->insert([
+            'name' => 'Banned',
+            'last_name' => 'User',
+            'email' => 'banned@foroclismo.com',
+            'banned_user' => 1,
+            'password' => bcrypt('test12')
+        ]);
     }
 }

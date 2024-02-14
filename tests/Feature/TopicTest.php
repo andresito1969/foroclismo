@@ -11,18 +11,6 @@ use App\Models\User;
 
 class TopicTest extends TestCase
 {
-    /**
-     * TEST INFO:
-     * Las funciones de crear-eliminar-actualizar no las testearemos porque podrían generar problemas de seguridad 
-     * básicamente porque si intentamos poner el $request en el controlador(que se podría), alguien podría ejecutar esta función pública
-     * con cualquier $request->user_id, de manera que un usuario común con conocimientos podría crear un comentario de admin.
-     * 
-     * Esto mismo sucede en la creación de comentarios.
-     * 
-     * TODO : Se puede solucionar haciendo que las peticiones pasen por API REST, de manera que desde esta función se llamaría a la API REST y desde
-     * el testeo se llamaría a esta función con un token. Por lo tanto el usuario malicioso debería pasar siempre un token validado para poder crear 
-     * dicha petición
-     *  */ 
     public function test_show_existent_topic(): void
     {
 
@@ -41,74 +29,117 @@ class TopicTest extends TestCase
 
     }
 
-    private function getUser() {
+    // TODO: I SHOULD GO TO THE ROUTE NAME INSTEAD OF ABSOLUTE ROUTE (TOPIC/CREATE)
+    public function test_create_topic(): void {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->post('/topic/create', [
+                'title' => 'Test título',
+                'topic_text' => 'Esta es una prueba',
+                'user_id' => $user->id
+            ]);
 
-        $user = User::create([
-            'name' => 'test',
-            'last_name' => 'test',
-            'email' => 'test1@foroclismo.com',
-            'password' => bcrypt(123)
-        ]);
+        $topic = Topic::where('user_id', $user->id);
+        
+        $topic->delete();
+        $user->delete();
 
-        return $user;
+        $response->assertStatus(302);
     }
 
-    // Como genera problemas de seguridad, no lo usaremos...
-    // Pero lo guardamos por si escalamos la app con peticiones RESTFUL
-    // public function test_create_topic(): void {
+    public function test_incorrect_create_topic_missing_id(): void {
+        $response = $this->post('/topic/create', [
+                'title' => 'Test título',
+                'topic_text' => 'Esta es una prueba'
+            ]);
 
-    //     $user = $this->getUser();
+        $response->assertRedirect('/login');
+    }
 
-    //     $response = $this->post('/create_topic', [
-    //         'title' => 'Test título',
-    //         'topic_text' => 'Esta es una prueba',
-    //         'user_id' => $user->id
-    //     ]);
+    public function test_incorrect_create_topic_missing_title(): void {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->post('/topic/create', [
+                'topic_text' => 'Esta es una prueba',
+                'user_id' => $user->id
+            ]);
 
-    //     $topic = Topic::where('user_id', $user->id);
-    //     $response->assertStatus(302);
+        $topic = Topic::where('user_id', $user->id);
         
-    //     // Borra los datos que acabamos de crear, para evitar inconsistencias
-    //     $topic->delete();
-    //     $user->delete();
-    // }
+        $topic->delete();
+        $user->delete();
 
-    // public function test_incorrect_create_topic_missing_id(): void {
+        $response->assertRedirect('/topic/create/topic');
+    }
 
-    //     // Borra el usuario que acabamos de crear, para evitar inconsistencias
+    public function test_edit_topic() : void {
+        $user = User::factory()->create();
+        $topic = Topic::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->patch('/topic/' . $topic->id . '/edit_topic', [
+                'text' => 'lel',
+                'title' => 'lal'
+            ]);
+        
 
-    //     $response = $this->post('/create_topic', [
-    //         'title' => 'Test título',
-    //         'topic_text' => 'Esta es una prueba',
-    //     ]);
+        $topic->delete();
+        $user->delete();
 
+        $response->assertRedirect('/topic/' . $topic->id);
+    }
 
-    //     $response->assertStatus(500);
-    // }
+    public function test_incorrect_edit_topic_null_text() : void {
+        $user = User::factory()->create();
+        $topic = Topic::factory()->create([
+            'user_id' => $user->id
+        ]);
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->patch('/topic/' . $topic->id . '/edit_topic', [
+                'text' => '',
+                'title' => 'lal'
+            ]);
+        
 
-    // public function test_incorrect_create_topic_missing_title(): void {
+        $topic->delete();
+        $user->delete();
+        
+        $response->assertRedirect('');
+    }
 
-    //     // Borra el usuario que acabamos de crear, para evitar inconsistencias
+    public function test_delete_topic() : void {
+        $user = User::factory()->create();
+        $topic = Topic::factory()->create([
+            'user_id' => $user->id
+        ]);
 
-    //     $response = $this->post('/create_topic', [
-    //         'topic_text' => 'Esta es una prueba',
-    //         'user_id' => 1
-    //     ]);
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->delete('/topic/' . $topic->id . '/delete');
 
+        $user->delete();
 
-    //     $response->assertStatus(500);
-    // }
+        $response->assertStatus(302);
+    }
 
-    // public function test_incorrect_create_topic_missing_topic_text(): void {
+    public function test_incorrect_delete_topic_malicious_auth() : void {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)
+            ->withSession(['banned' => false])
+            ->delete('/topic/1/delete');
 
-    //     // Borra el usuario que acabamos de crear, para evitar inconsistencias
+        $user->delete();
+        $response->assertStatus(404);
+    }
 
-    //     $response = $this->post('/create_topic', [
-    //         'title' => 'Test título',
-    //         'user_id' => 1
-    //     ]);
+    public function test_incorrect_delete_topic_not_logged() : void {
+        $response = $this->delete('/topic/1/delete');
 
-
-    //     $response->assertStatus(500);
-    // }
+        $response->assertRedirect('login');
+    }
 }

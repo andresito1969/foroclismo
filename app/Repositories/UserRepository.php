@@ -8,6 +8,10 @@ class UserRepository implements UserRepositoryInterface {
         return User::findOrFail($id);
     }
 
+    public function getUserByMail($mail) {
+        return User::where('email', $mail)->first();
+    }
+
     public function saveUser(array $data) : void {
         $user = new User($data);
         $user->save();
