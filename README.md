@@ -9,7 +9,9 @@ Laravel forum created for learning purposes
         Model:
             Migrations, seedings, eloquent and Factories
     
-        Unit testing
+        Testing:
+            Unit Testing: Used to test a single portion of our app, normally single methods or services.
+            Feature Testing: Used to test more parts of our app, like HTTP requests, or classes that interact with other classes.
 
         PHP:
             Traits, interfaces
