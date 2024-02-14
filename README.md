@@ -12,6 +12,8 @@ Laravel forum created for learning purposes
         Testing:
             Unit Testing: Used to test a single portion of our app, normally single methods or services.
             Feature Testing: Used to test more parts of our app, like HTTP requests, or classes that interact with other classes.
+            TDD: Write the tests before writing the actual code, so we kinda have a script (like a movie) that will fail in the beginning
+            and our code must validate that script (test).
 
         PHP:
             Traits, interfaces
