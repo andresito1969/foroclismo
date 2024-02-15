@@ -44,11 +44,12 @@ class ShowProfileTest extends TestCase
     }
 
     public function test_show_ban_button_profile(): void {
-        $this->user = User::factory()->create(['is_admin' => 1]);
-        $response = $this->actingAs($this->user)
+        $user = User::factory()->create(['is_admin' => 1]);
+        $response = $this->actingAs($user)
                 ->withSession(['banned' => false])
-                ->get('/user/' . $this->user->id);
+                ->get('/user/' . $user->id);
         $response->assertSee('Banea');
+        $user->delete();
     }
 
     public function test_dont_show_ban_button_profile(): void {
