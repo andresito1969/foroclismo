@@ -1,0 +1,100 @@
+TODO: 
+	VUEjs
+		:D
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+	Improvement unit tests??
+		$this->assertDatabaseHas('topic', $topic); <- verificar si se ha añadido realmente a la BBDD
+			assertDatabaseMissing <- verifica si se ha borrado realmente de la BBDD
+
+		$this->assertEquals($topic['id'], Topic::latest()->first()->id), si son el mismo
+
+		Quizás debería de poder ir en los $response->get al nombre de la ruta, no a la ruta absoluta...
+			Ej: TopicTest -> test_create_topic
+		100 tests under a second o 1000 tests under a second
+
+		
+	Check if traits are good in php?
+	Check controllers to reutilize code deffo
+	Check advanced laravel videos on how should all be done
+	Check laravel documentation
+	Check patterns
+	Constants of max and min length can come from DB in a config table
+
+	check laravel middlewares and providers???
+
+	Me molaría que si ya he accedido a una vista con su modelo, a la hora de editar o borrar, que no me instancie en el controlador de la función pertinente, valorar si es posible.
+
+
+Sería interesante que haya una BBDD de config que ponga las constantes de la app!
+
+
+Mostrar temas de un user y sus mensajes en el perfil
+Paginación..
+Are you sure to delete?
+Escribir mejores tests
+Revisar app
+API RESTFUL
+FRONTEND REACT (luego añadir typescript, pero primero react)
+Añadir sistema de tageo
+Sistema de notificaciones
+Sistema de chat
+
+
+Quizás en perfil el manage de usuario q banea, debería desbanear algo así como un tooltip ...
+
+
+
+**ANSWERS**
+	Con el modelo podemos usar funciones reutilizables, lo suyo en realidad sería meter funciones queries que se usen en toda la app...
+		Repositories!
+
+	Revisar bien si mi modelo contiene lo que debería tener y mi controlador igual...
+	Quizás mirar un curso de mvc completo y avanzado o buscar mucha más info.
+		Yes, aunque el modelo tenía funciones checkers que se han pasado al repository
+		Y mi controlador hacía lo de arriba, no tenía funciones reutilizables y en cada método del controller
+		estaba accediendo al modelo, ejemplo User::finds en varios sitios, cuando es mejor tenerlo centralizado en una sola función
+
+		REPOSITORIES! ES LA RESPUESTA :D
+
+
+	Cunden los traits?
+
+
+
+
+
+PARALLELIZE
